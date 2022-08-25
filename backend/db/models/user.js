@@ -1,14 +1,12 @@
 "use strict";
 const { Model, Validator } = require("sequelize");
-const bcrypt = require('bcryptjs');
+const bcrypt = require("bcryptjs");
 module.exports = (sequelize, DataTypes) => {
   class User extends Model {
-
-
     //  This method will return an object with only the User instance information that is safe to save to a JWT, like id, username, and email:
     toSafeObject() {
-      const = {id, username, email} = this;
-      return {id, username, email};
+      const { id, username, email } = this; // context will be the User instance
+      return { id, username, email };
     }
     // instance method will return true if there is a match with the User instance's hashedPassword, otherwise false:
     validatePassword(password) {
@@ -20,17 +18,17 @@ module.exports = (sequelize, DataTypes) => {
     }
     //method should search for one User with the specified credential (either a username or an email). If a user is found, then the method should validate the password by passing it into the instance's .validatePassword method. If the password is valid, then the method should return the user by using the currentUser scope.
     static async login({ credential, password }) {
-      const { Op } = require('sequelize');
-      const user = await User.scope('loginUser').findOne({
+      const { Op } = require("sequelize");
+      const user = await User.scope("loginUser").findOne({
         where: {
           [Op.or]: {
             username: credential,
-            email: credential
-          }
-        }
+            email: credential,
+          },
+        },
       });
       if (user && user.validatePassword(password)) {
-        return await User.scope('currentUser').findByPk(user.id);
+        return await User.scope("currentUser").findByPk(user.id);
       }
     }
     // Define a static method signup that accepts an object with a username, email, and password key. Hash the password using the bcryptjs package's hashSync method. Create a User with the username, email, and hashedPassword. Return the created user using the currentUser scope.
@@ -39,9 +37,9 @@ module.exports = (sequelize, DataTypes) => {
       const user = await User.create({
         username,
         email,
-        hashedPassword
+        hashedPassword,
       });
-      return await User.scope('currentUser').findByPk(user.id);
+      return await User.scope("currentUser").findByPk(user.id);
     }
     //associations
     static associate(models) {

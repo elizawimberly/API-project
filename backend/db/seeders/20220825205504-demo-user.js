@@ -2,32 +2,23 @@
 const bcrypt = require("bcryptjs");
 
 module.exports = {
-  async up(queryInterface, Sequelize) {
-    /**
-     * Add seed commands here.
-     *
-     * Example:
-     * await queryInterface.bulkInsert('People', [{
-     *   name: 'John Doe',
-     *   isBetaMember: false
-     * }], {});
-     */
-    await queryInterface.bulkInsert(
+  up: async (queryInterface, Sequelize) => {
+    return queryInterface.bulkInsert(
       "Users",
       [
         {
-          username: "SorenDog",
-          email: "soren@cutedogs.com",
+          email: "demo@user.io",
+          username: "Demo-lition",
           hashedPassword: bcrypt.hashSync("password"),
         },
         {
-          username: "CaseyPlaysMusic",
-          email: "casey@aol.com",
+          email: "user1@user.io",
+          username: "FakeUser1",
           hashedPassword: bcrypt.hashSync("password2"),
         },
         {
-          username: "BuddyIsMyFriend",
-          email: "buddy@siamesecats.com",
+          email: "user2@user.io",
+          username: "FakeUser2",
           hashedPassword: bcrypt.hashSync("password3"),
         },
       ],
@@ -35,13 +26,14 @@ module.exports = {
     );
   },
 
-  async down(queryInterface, Sequelize) {
-    /**
-     * Add commands to revert seed here.
-     *
-     * Example:
-     * await queryInterface.bulkDelete('People', null, {});
-     */
-    await queryInterface.bulkDelete("Users", null, {});
+  down: async (queryInterface, Sequelize) => {
+    const Op = Sequelize.Op;
+    return queryInterface.bulkDelete(
+      "Users",
+      {
+        username: { [Op.in]: ["Demo-lition", "FakeUser1", "FakeUser2"] },
+      },
+      {}
+    );
   },
 };
