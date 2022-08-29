@@ -4,7 +4,15 @@ const sessionRouter = require("./session.js");
 const usersRouter = require("./users.js");
 const { restoreUser } = require("../../utils/auth.js");
 
+//added requireAuth import based on alec's walthru
+const { requireAuth } = require("../../utils/auth.js");
+
 // All the URLs of the routes in the api router will be prefixed with /api.
+
+//added from alec's walthru
+router.get("/require-auth", requireAuth, (req, res) => {
+  res.json({ message: "success" });
+});
 
 router.use(restoreUser);
 
