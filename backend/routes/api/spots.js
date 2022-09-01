@@ -19,87 +19,37 @@ const router = express.Router();
 router.use(express.json());
 
 //GET ALL SPOTS
-//NOTE FOR GET ALL SPOTS-
-//SET PREVIEW TRUE FOR ONE SPOT IMAGE AND SET QUERY FILTER TO FIND PREVIEW IMAGE TRUE
-
-//try using raw:true on get all spots for current user
-
 router.get("/", async (req, res) => {
-  let result = [];
-
-  let spots = await Spot.findAll({});
-  //for loop or for of works to iterate- use await here
-  //review.count and review.sum
-  //const findReview = await spot.getReviews({
-  //       attributes: [
-  //         [sequelize.fn("AVG", sequelize.col("stars")), "avgRating"]
-  // gotta kinda do ssomething like this
-  // to get your average reviews
-
-  // for (let i = 0; i < spots.length; i++) {
-  //   let currentSpot = spots[i];
-  //   let reviews = await currentSpot.getReviews();
-  //   result.push(reviews);
-  // }
-
-  res.json({ spots });
-});
-
-////CHANGED PATH TO TEST
-router.get("/TEST", async (req, res) => {
-  let spotsTarget = await Spot.findAll({
-    include: {
-      model: Review,
-      // attributes: [
-      //   [sequelize.fn("AVG", sequelize.col("Reviews.stars")), "avgRating"],
-      // ],
-      attributes: [],
+  const spots = await Spot.findAll({
+    attributes: {
+      include: [
+        [
+          sequelize.literal(
+            `(SELECT AVG(stars)
+                    FROM reviews AS review
+                    WHERE review.spotId = spot.id)`
+          ),
+          "avgRating",
+        ],
+        [
+          sequelize.literal(
+            `(SELECT url
+                    FROM spotImages AS spotImage
+                    WHERE spotImage.spotId = spot.id
+                    AND preview = true)`
+          ),
+          "previewImage",
+        ],
+      ],
     },
-    // attributes: ["id", "ownerId"],
-    attributes: [
-      "id",
-      "ownerId",
-      "address",
-      "city",
-      "state",
-      "country",
-      "lat",
-      "lng",
-      "name",
-      "description",
-      "price",
-      "createdAt",
-      "updatedAt",
-      [sequelize.fn("AVG", sequelize.col("Reviews.stars")), "avgRating"],
-    ],
-    // raw: true,
-    // nest: true,
   });
 
-  // return (await model.findAll({ ...options })).map(record => record.toJSON());
-
-  // let newSpot = spotsTarget.map((record) => {
-  //   return record.toJSON();
-  // });
-
-  let previewImage = await SpotImage.findOne({
-    where: (spotId = spotsTarget.id),
+  res.json({
+    Spots: spots,
   });
-
-  let newObj = spotsTarget[0].toJSON();
-
-  let Spots = [
-    {
-      ...newObj,
-      previewImage: previewImage.url,
-    },
-  ];
-
-  Spots.previewImage = previewImage.url;
-
-  res.json({ Spots });
 });
 
+//CREATE A SPOT
 router.post("/", requireAuth, async (req, res) => {
   // const { user } = req;
   // if (user) {
@@ -281,6 +231,39 @@ router.post("/:spotId/images", requireAuth, async (req, res) => {
   };
 
   res.json(result);
+});
+
+//GET SPOTS OF CURRENT USER
+router.get("/current", async (req, res) => {
+  let userId = req.user.id;
+
+  let spots = await Spot.findAll({
+    where: {
+      ownerId: userId,
+    },
+    attributes: {
+      include: [
+        [
+          sequelize.literal(`(
+            select avg(stars)
+            from reviews as review
+            where review.userId = spot.id
+          )`),
+          "avgRating",
+        ],
+        [
+          sequelize.literal(`(
+            select url
+            from SpotImages as SpotImage
+            where SpotImage.spotId = spot.id
+          )`),
+          "previewImage",
+        ],
+      ],
+    },
+  });
+
+  res.json(spots);
 });
 
 //EDIT A SPOT
@@ -555,5 +538,78 @@ module.exports = router;
 //     //   [sequelize.fn("AVG", sequelize.col("Reviews.stars")), "avgRating"],
 //     // ],
 //   });
+//   res.json({ Spots });
+// });
+
+//try using raw:true on get all spots for current user
+
+///////notes for get all spots:
+//for loop or for of works to iterate- use await here
+//review.count and review.sum
+//const findReview = await spot.getReviews({
+//       attributes: [
+//         [sequelize.fn("AVG", sequelize.col("stars")), "avgRating"]
+// gotta kinda do ssomething like this
+// to get your average reviews
+
+// for (let i = 0; i < spots.length; i++) {
+//   let currentSpot = spots[i];
+//   let reviews = await currentSpot.getReviews();
+//   result.push(reviews);
+// }
+
+//OLD CODE:
+// ////CHANGED PATH TO TEST
+// router.get("/TEST", async (req, res) => {
+//   let spotsTarget = await Spot.findAll({
+//     include: {
+//       model: Review,
+//       // attributes: [
+//       //   [sequelize.fn("AVG", sequelize.col("Reviews.stars")), "avgRating"],
+//       // ],
+//       attributes: [],
+//     },
+//     // attributes: ["id", "ownerId"],
+//     attributes: [
+//       "id",
+//       "ownerId",
+//       "address",
+//       "city",
+//       "state",
+//       "country",
+//       "lat",
+//       "lng",
+//       "name",
+//       "description",
+//       "price",
+//       "createdAt",
+//       "updatedAt",
+//       [sequelize.fn("AVG", sequelize.col("Reviews.stars")), "avgRating"],
+//     ],
+//     // raw: true,
+//     // nest: true,
+//   });
+
+//   // return (await model.findAll({ ...options })).map(record => record.toJSON());
+
+//   // let newSpot = spotsTarget.map((record) => {
+//   //   return record.toJSON();
+//   // });
+
+//   let previewImage = await SpotImage.findOne({
+//     where: (spotId = spotsTarget.id),
+//   });
+
+//   let newObj = spotsTarget[0].toJSON();
+
+//   let Spots = [
+//     {
+//       ...newObj,
+//       previewImage: previewImage.url,
+//     },
+//   ];
+
+//   Spots.previewImage = previewImage.url;
+
 //   res.json({ Spots });
 // });
