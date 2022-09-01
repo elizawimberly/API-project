@@ -232,7 +232,7 @@ router.post("/", requireAuth, async (req, res) => {
 //
 //
 //
-//CREATE IMAGE FOR A SPOT
+//CREATE AN IMAGE FOR A SPOT
 router.post("/:spotId/images", requireAuth, async (req, res) => {
   let user = req.user.id;
 
