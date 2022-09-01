@@ -22,51 +22,27 @@ router.use(express.json());
 //NOTE FOR GET ALL SPOTS-
 //SET PREVIEW TRUE FOR ONE SPOT IMAGE AND SET QUERY FILTER TO FIND PREVIEW IMAGE TRUE
 
+//try using raw:true on get all spots for current user
+
 router.get("/", async (req, res) => {
-  let Spots = await Spot.findAll({
-    //const findReview = await spot.getReviews({
-    //       attributes: [
-    //         [sequelize.fn("AVG", sequelize.col("stars")), "avgRating"]
-    // gotta kinda do ssomething like this
-    // to get your average reviews
-    //
-    //
-    //
-    //
-    //
-    // include: [
-    //   {
-    //     model: Review,
-    //     // attributes: [
-    //     //   [sequelize.fn("AVG", sequelize.col("Reviews.stars")), "avgRating"],
-    //     // ],
-    //     attributes: [
-    //       [sequelize.fn("AVG", sequelize.col("Reviews.stars")), "avgRating"],
-    //     ],
-    //   },
-    // {
-    //   model: SpotImage,
-    //   attributes: ["url"],
-    // },
-    // ],
-    // attributes: [
-    //   "id",
-    //   "ownerId",
-    //   "address",
-    //   "city",
-    //   "state",
-    //   "country",
-    //   "lat",
-    //   "lng",
-    //   "name",
-    //   "description",
-    //   "price",
-    //   "createdAt",
-    //   "updatedAt",
-    //   [sequelize.fn("AVG", sequelize.col("Reviews.stars")), "avgRating"],
-    // ],
-  });
-  res.json({ Spots });
+  let result = [];
+
+  let spots = await Spot.findAll({});
+  //for loop or for of works to iterate- use await here
+  //review.count and review.sum
+  //const findReview = await spot.getReviews({
+  //       attributes: [
+  //         [sequelize.fn("AVG", sequelize.col("stars")), "avgRating"]
+  // gotta kinda do ssomething like this
+  // to get your average reviews
+
+  // for (let i = 0; i < spots.length; i++) {
+  //   let currentSpot = spots[i];
+  //   let reviews = await currentSpot.getReviews();
+  //   result.push(reviews);
+  // }
+
+  res.json({ spots });
 });
 
 ////CHANGED PATH TO TEST
@@ -509,5 +485,75 @@ router.post("/:spotId/reviews", requireAuth, async (req, res) => {
   res.status(201).json(newReview);
 });
 
+//DELETE A SPOT
+router.delete("/:spotId", requireAuth, async (req, res) => {
+  let spotId = req.params.spotId;
+  let spot = await Spot.findByPk(spotId);
+
+  if (!spot) {
+    return res.status(404).json({
+      message: "Spot couldn't be found",
+      statusCode: 404,
+    });
+  }
+
+  await spot.destroy();
+
+  res.json({
+    message: "Successfully deleted",
+    statusCode: 200,
+  });
+});
+
 //end
 module.exports = router;
+
+//OLD IMPLEMENTATION OF GET ALL SPOTS:
+// router.get("/", async (req, res) => {
+//   let Spots = await Spot.findAll({
+//     //for loop or for of works to iterate- use await here
+//     //review.count and review.sum
+//     //const findReview = await spot.getReviews({
+//     //       attributes: [
+//     //         [sequelize.fn("AVG", sequelize.col("stars")), "avgRating"]
+//     // gotta kinda do ssomething like this
+//     // to get your average reviews
+//     //
+//     //
+//     //
+//     //
+//     //
+//     // include: [
+//     //   {
+//     //     model: Review,
+//     //     // attributes: [
+//     //     //   [sequelize.fn("AVG", sequelize.col("Reviews.stars")), "avgRating"],
+//     //     // ],
+//     //     attributes: [
+//     //       [sequelize.fn("AVG", sequelize.col("Reviews.stars")), "avgRating"],
+//     //     ],
+//     //   },
+//     // {
+//     //   model: SpotImage,
+//     //   attributes: ["url"],
+//     // },
+//     // ],
+//     // attributes: [
+//     //   "id",
+//     //   "ownerId",
+//     //   "address",
+//     //   "city",
+//     //   "state",
+//     //   "country",
+//     //   "lat",
+//     //   "lng",
+//     //   "name",
+//     //   "description",
+//     //   "price",
+//     //   "createdAt",
+//     //   "updatedAt",
+//     //   [sequelize.fn("AVG", sequelize.col("Reviews.stars")), "avgRating"],
+//     // ],
+//   });
+//   res.json({ Spots });
+// });
