@@ -566,6 +566,39 @@ router.delete("/:spotId", requireAuth, async (req, res) => {
   });
 });
 
+//
+//
+//
+//
+//
+//
+//GET REVIEWS OF SPOT BY ID
+router.get("/:spotId/reviews", requireAuth, async (req, res) => {
+  let spotId = req.params.spotId;
+
+  let reviews = await Review.findAll({
+    where: {
+      spotId: spotId,
+    },
+    include: [
+      {
+        model: User,
+      },
+      {
+        model: ReviewImage,
+      },
+    ],
+  });
+
+  res.json(reviews);
+});
+
+//end
+//end
+//end
+//end
+//end
+//end
 //end
 module.exports = router;
 

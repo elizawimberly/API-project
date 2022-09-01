@@ -77,6 +77,16 @@ router.get("/current", requireAuth, async (req, res) => {
 //
 //
 //
+//
+//
+//EDIT A REVIEW
+router.put("/:reviewId", requireAuth, async (req, res) => {
+  let reviewId = Number(req.params.reviewId);
+
+  let review = await Review.findByPk(reviewId);
+
+  res.json({ review });
+});
 
 //
 //
