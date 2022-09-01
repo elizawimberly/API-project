@@ -593,6 +593,36 @@ router.get("/:spotId/reviews", requireAuth, async (req, res) => {
   res.json(reviews);
 });
 
+//
+//
+//
+//
+//
+//
+//CREATE A BOOKING BASED ON A SPOT ID
+//postman route:  {{url}}/spots/{{spotId}}/bookings
+router.post("/:spotId/bookings", requireAuth, async (req, res) => {
+  let spotId = req.params.spotId;
+
+  const { startDate, endDate } = req.body;
+
+  let newBooking = await Booking.create({
+    startDate: new Date(startDate),
+    endDate: new Date(endDate),
+  });
+
+  res.json({ newBooking });
+  // res.json("success");
+});
+
+//
+//
+//
+//
+//
+//
+//GET ALL BOOKINGS FOR A SPOT BY ID
+
 //end
 //end
 //end
