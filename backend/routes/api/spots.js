@@ -19,6 +19,7 @@ const router = express.Router();
 router.use(express.json());
 
 //
+//token: XDQFDSS9-0pfgObowfRCcLrBEixAaGbUsyoc
 //
 //
 //GET ALL SPOTS
@@ -38,10 +39,10 @@ router.get("/", async (req, res) => {
     let reviews = await Spot.getReviews({
       attributes: [[sequelize.fn("AVG", sequelize.col("stars")), "avgRating"]],
     });
-    // console.log(reviews);
+    console.log(reviews);
     let spotObj = Spot.toJSON();
     spotObj.reviews = reviews;
-    // console.log(spotObj.reviews[0]);
+    console.log(spotObj.reviews[0]);
     // spotObj.avgRating = reviews.[0].avgRating;
     result.push(spotObj);
   }
@@ -52,8 +53,8 @@ router.get("/", async (req, res) => {
     // console.log(List);
     let average = spotList.reviews[0].toJSON();
     spotList.avgRating = average.avgRating;
-    delete spotList.reviews;
-    // console.log(average);
+    delete spotList.reviews; ///*****ADD THIS CODE BACK */
+    console.log(average);
     // newResult.push(List.reviews[0]);
     newResult.push(spotList);
   }
@@ -510,7 +511,12 @@ router.put("/:spotId", async (req, res) => {
     });
   }
 
-  let spot = await Spot.findByPk(spotId);
+  // let spot = await Spot.findByPk(spotId);
+  let spot = await Spot.findByPk(spotId, {
+    attributes: {
+      exlude: ["createdAt", "updatedAt"],
+    },
+  });
 
   if (!spot) {
     return res.status(404).json({
