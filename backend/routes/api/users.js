@@ -33,6 +33,14 @@ const validateSignup = [
 ];
 
 // Sign up
+//postman body:
+// {
+//   "firstName": "John",
+//   "lastName": "Smith",
+//   "email": "john.smith@gmail.com",
+//   "username": "johnnysmith",
+//   "password": "secret password"
+// }
 router.post("/", validateSignup, async (req, res) => {
   const { email, password, username, firstName, lastName } = req.body;
   const user = await User.signup({
@@ -45,9 +53,16 @@ router.post("/", validateSignup, async (req, res) => {
 
   await setTokenCookie(res, user);
 
-  return res.json({
-    user,
-  });
+  //new code;
+  let userObj = user.toJSON();
+  delete userObj.hashedPassword;
+  delete userObj.id;
+
+  return res.json(userObj);
+
+  // return res.json({
+  //   user,
+  // });
 });
 
 module.exports = router;
