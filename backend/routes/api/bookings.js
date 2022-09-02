@@ -48,5 +48,48 @@ router.get("/current", requireAuth, async (req, res) => {
 //
 //
 //
+//
+//EDIT A BOOKING
+//postman route:  {{url}}/bookings/{{bookingId}}
+router.put("/:bookingId", requireAuth, async (req, res) => {
+  let userId = req.user.id;
+
+  let id = req.params.bookingId;
+
+  const { startDate, endDate } = req.body;
+
+  let booking = await Booking.findByPk(id);
+
+  booking.set({
+    startDate: new Date(startDate),
+    endDate: new Date(endDate),
+  });
+
+  await booking.save();
+
+  res.json({ booking });
+});
+
+//
+//
+//
+//
+//
+//DELETE A BOOKING
+//postman route: {{url}}/bookings/{{bookingId}}
+router.delete("/:bookingId", requireAuth, async (req, res) => {
+  let bookingId = req.params.bookingId;
+
+  let booking = await Booking.findByPk(bookingId);
+
+  await booking.destroy();
+
+  res.json(booking);
+});
+
+//
+//
+//
+//
 //end
 module.exports = router;

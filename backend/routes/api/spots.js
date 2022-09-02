@@ -26,28 +26,37 @@ router.get("/", async (req, res) => {
   const spots = await Spot.findAll({
     include: [
       {
-        model: Review,
-        // attributes: [],
-      },
-      {
         model: SpotImage,
-        // attributes: ["url", "preview"],
+        attributes: ["url", "preview"],
       },
     ],
-    //add this to test
-    // attributes: {
-    //   include: [[sequelize.fn("AVG", sequelize.col("stars")), "avgRating"]],
-    // },
-    // group: ["Spot.id"], // to return all spots
-    // raw: true,
-    //end of test
   });
-  console.log(spots);
 
-  let spotsList = [];
-  spots.forEach((spot) => {
-    spotsList.push(spot.toJSON());
-  });
+  let result = [];
+
+  for (let Spot of spots) {
+    let reviews = await Spot.getReviews({
+      attributes: [[sequelize.fn("AVG", sequelize.col("stars")), "avgRating"]],
+    });
+    // console.log(reviews);
+    let spotObj = Spot.toJSON();
+    spotObj.reviews = reviews;
+    // console.log(spotObj.reviews[0]);
+    // spotObj.avgRating = reviews.[0].avgRating;
+    result.push(spotObj);
+  }
+
+  let newResult = [];
+
+  for (let spotList of result) {
+    // console.log(List);
+    let average = spotList.reviews[0].toJSON();
+    spotList.avgRating = average.avgRating;
+    delete spotList.reviews;
+    // console.log(average);
+    // newResult.push(List.reviews[0]);
+    newResult.push(spotList);
+  }
 
   // let spotsList = [];
   // spots.forEach((spot) => {
@@ -56,8 +65,9 @@ router.get("/", async (req, res) => {
 
   // console.log(spotsList);
 
+  //IMPORTANT CODE FROM ALEC LECTURE
   // use nested looping to iterate over all spot images for each spot
-  spotsList.forEach((spot) => {
+  newResult.forEach((spot) => {
     spot.SpotImages.forEach((image) => {
       //check if each image has a preview prop of true
       if (image.preview === true) {
@@ -74,7 +84,7 @@ router.get("/", async (req, res) => {
   });
 
   // res.json(spotsList);
-  res.json(spotsList);
+  res.json(newResult);
 });
 
 //
@@ -486,6 +496,7 @@ router.put("/:spotId", async (req, res) => {
 //
 //
 //CREATE A REVIEW FOR A SPOT
+//postman route: {{url}}/spots/{{spotId}}/reviews
 router.post("/:spotId/reviews", requireAuth, async (req, res) => {
   let userId = req.user.id;
   let spotId = Number(req.params.spotId);
@@ -622,6 +633,17 @@ router.post("/:spotId/bookings", requireAuth, async (req, res) => {
 //
 //
 //GET ALL BOOKINGS FOR A SPOT BY ID
+//postman path:   {{url}}/spots/{{spotId}}/bookings
+router.get("/:spotId/bookings", requireAuth, async (req, res) => {
+  spotId = req.params.spotId;
+
+  let bookings = await Booking.findAll({
+    where: {
+      spotId: spotId,
+    },
+  });
+  res.json(bookings);
+});
 
 //end
 //end
