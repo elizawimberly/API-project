@@ -84,7 +84,7 @@ router.get("/", async (req, res) => {
   });
 
   // res.json(spotsList);
-  res.json(newResult);
+  res.json({ Spots: newResult });
 });
 
 //
@@ -92,8 +92,10 @@ router.get("/", async (req, res) => {
 //
 //
 //GET SPOTS OF CURRENT USER
+//NOTES, need to fix something. postman route works for userID = 3, but not from req.user
 router.get("/current", requireAuth, async (req, res) => {
   let userId = req.user.id;
+  // let userId = 3;
 
   const spots = await Spot.findAll({
     where: {
@@ -101,23 +103,40 @@ router.get("/current", requireAuth, async (req, res) => {
     },
     include: [
       {
-        model: Review,
-        // attributes: [],
-      },
-      {
         model: SpotImage,
-        // attributes: ["url", "preview"],
+        attributes: ["url", "preview"],
       },
     ],
   });
 
-  let spotsList = [];
-  spots.forEach((spot) => {
-    spotsList.push(spot.toJSON());
-  });
+  let result = [];
 
+  for (let Spot of spots) {
+    let reviews = await Spot.getReviews({
+      attributes: [[sequelize.fn("AVG", sequelize.col("stars")), "avgRating"]],
+    });
+
+    let spotObj = Spot.toJSON();
+    spotObj.reviews = reviews;
+
+    result.push(spotObj);
+  }
+
+  let newResult = [];
+
+  for (let spotList of result) {
+    // console.log(List);
+    let average = spotList.reviews[0].toJSON();
+    spotList.avgRating = average.avgRating;
+    delete spotList.reviews;
+    // console.log(average);
+    // newResult.push(List.reviews[0]);
+    newResult.push(spotList);
+  }
+
+  //IMPORTANT CODE FROM ALEC LECTURE
   // use nested looping to iterate over all spot images for each spot
-  spotsList.forEach((spot) => {
+  newResult.forEach((spot) => {
     spot.SpotImages.forEach((image) => {
       //check if each image has a preview prop of true
       if (image.preview === true) {
@@ -134,7 +153,7 @@ router.get("/current", requireAuth, async (req, res) => {
   });
 
   // res.json(spotsList);
-  res.json(spotsList);
+  res.json({ Spots: newResult });
 });
 
 //
@@ -142,6 +161,7 @@ router.get("/current", requireAuth, async (req, res) => {
 //
 //
 //GET DETAILS OF A SPOT BY ID
+//postman  {{url}}/spots/{{spotId}}
 router.get("/:spotId", requireAuth, async (req, res) => {
   let spotId = req.params.spotId;
 
@@ -150,16 +170,17 @@ router.get("/:spotId", requireAuth, async (req, res) => {
       id: spotId,
     },
     include: [
-      {
-        model: Review,
-        // attributes: [],
-      },
-      {
-        model: SpotImage,
-        // attributes: ["url", "preview"],
-      },
+      // {
+      //   model: Review,
+      //   // attributes: [],
+      // },
+      // {
+      //   model: SpotImage,
+      //   attributes: ["id", "url", "preview"],
+      // },
       {
         model: User,
+        attributes: ["id", "firstName", "lastName"],
       },
     ],
   });
@@ -171,7 +192,29 @@ router.get("/:spotId", requireAuth, async (req, res) => {
     });
   }
 
-  res.json(spot);
+  let reviews = await spot.getReviews({
+    attributes: [[sequelize.fn("AVG", sequelize.col("stars")), "avgRating"]],
+  });
+
+  let spotObj = spot.toJSON();
+  spotObj.reviews = reviews;
+  let average = spotObj.reviews[0].toJSON();
+  spotObj.avgStarRating = average.avgRating;
+  delete spotObj.reviews;
+
+  let spotImages = await spot.getSpotImages({
+    attributes: ["id", "url", "preview"],
+  });
+
+  console.log(spotImages);
+  delete spotObj.SpotImages;
+
+  spotObj.SpotImages = spotImages;
+
+  spotObj.Owner = spotObj.User;
+  delete spotObj.User;
+
+  res.json(spotObj);
 });
 
 //
@@ -310,6 +353,11 @@ router.post("/", requireAuth, async (req, res) => {
 //
 //
 //CREATE AN IMAGE FOR A SPOT
+//I need to refactor after postman route body got updated with previewImage prop
+// {
+//   "url": "image.url",
+//   "previewImage": true //or false
+// }
 router.post("/:spotId/images", requireAuth, async (req, res) => {
   let user = req.user.id;
 
@@ -775,111 +823,94 @@ module.exports = router;
 // }
 
 //OLD CODE:
-// ////CHANGED PATH TO TEST
-// router.get("/TEST", async (req, res) => {
-//   let spotsTarget = await Spot.findAll({
-//     include: {
-//       model: Review,
-//       // attributes: [
-//       //   [sequelize.fn("AVG", sequelize.col("Reviews.stars")), "avgRating"],
-//       // ],
-//       attributes: [],
-//     },
-//     // attributes: ["id", "ownerId"],
-//     attributes: [
-//       "id",
-//       "ownerId",
-//       "address",
-//       "city",
-//       "state",
-//       "country",
-//       "lat",
-//       "lng",
-//       "name",
-//       "description",
-//       "price",
-//       "createdAt",
-//       "updatedAt",
-//       [sequelize.fn("AVG", sequelize.col("Reviews.stars")), "avgRating"],
-//     ],
-//     // raw: true,
-//     // nest: true,
-//   });
-
-//   // return (await model.findAll({ ...options })).map(record => record.toJSON());
-
-//   // let newSpot = spotsTarget.map((record) => {
-//   //   return record.toJSON();
-//   // });
-
-//   let previewImage = await SpotImage.findOne({
-//     where: (spotId = spotsTarget.id),
-//   });
-
-//   let newObj = spotsTarget[0].toJSON();
-
-//   let Spots = [
-//     {
-//       ...newObj,
-//       previewImage: previewImage.url,
-//     },
-//   ];
-
-//   Spots.previewImage = previewImage.url;
-
-//   res.json({ Spots });
-// });
-
 //GET SPOTS OF CURRENT USER
-// router.get("/current", async (req, res) => {
+// router.get("/current", requireAuth, async (req, res) => {
 //   let userId = req.user.id;
 
-//   let spots = await Spot.findAll({
+//   const spots = await Spot.findAll({
 //     where: {
 //       ownerId: userId,
 //     },
-//     attributes: {
-//       include: [
-//         [
-//           sequelize.literal(`(
-//             select avg(stars)
-//             from reviews as review
-//             where review.userId = spot.id
-//           )`),
-//           "avgRating",
-//         ],
-//         [
-//           sequelize.literal(`(
-//             select url
-//             from SpotImages as SpotImage
-//             where SpotImage.spotId = spot.id
-//           )`),
-//           "previewImage",
-//         ],
-//       ],
-//     },
+//     include: [
+//       {
+//         model: Review,
+//         // attributes: [],
+//       },
+//       {
+//         model: SpotImage,
+//         // attributes: ["url", "preview"],
+//       },
+//     ],
 //   });
 
-//   res.json(spots);
+//   let spotsList = [];
+//   spots.forEach((spot) => {
+//     spotsList.push(spot.toJSON());
+//   });
+
+//   // use nested looping to iterate over all spot images for each spot
+//   spotsList.forEach((spot) => {
+//     spot.SpotImages.forEach((image) => {
+//       //check if each image has a preview prop of true
+//       if (image.preview === true) {
+//         //if the image is true, creat a new prop on spot
+//         spot.previewImage = image.url;
+//       }
+//     });
+//     //check if each spot has a previewImage property, if not add one
+//     if (!spot.previewImage) {
+//       spot.previewImage = null;
+//     }
+//     //remove SpotImage prop from each spot object
+//     delete spot.SpotImages;
+//   });
+
+//   // res.json(spotsList);
+//   res.json(spotsList);
 // });
 
-// const allSpots = await Spot.findAll({
+//SAVED FRIDAY
+//CREATE AN IMAGE FOR A SPOT
+//I need to refactor after postman route body got updated with previewImage prop
+// {
+//   "url": "image.url",
+//   "previewImage": true //or false
+// }
+// router.post("/:spotId/images", requireAuth, async (req, res) => {
+//   let user = req.user.id;
 
-//   include: [{
-//       model: Review,
-//       attributes: []
-//   },
-//   {
-//       model: SpotImage,
-//       attributes: ["url",]
+//   let spotId = Number(req.params.spotId);
+
+//   let spot = await Spot.findByPk(spotId);
+
+//   console.log("here is the spot info:", spot);
+
+//   if (!spot) {
+//     return res.status(404).json({
+//       message: "Spot couldn't be found",
+//       statusCode: 404,
+//     });
 //   }
-// ],
-// attributes: {
-//   include: [
-//       [sequelize.fn("AVG", sequelize.col("stars")), "avgRating"]
-//   ]
-// },
-// group: ["Spot.id"], // to return all spots
-// raw: true
-//   res.json(spots);
+
+//   const { url, preview } = req.body;
+
+//   let newSpotImage = await SpotImage.create({
+//     spotId,
+//     url,
+//     preview,
+//   });
+
+//   if (!newSpotImage.preview) {
+//     newSpotImage.preview = null;
+//   }
+
+//   let newObj = newSpotImage.toJSON();
+
+//   let result = {
+//     id: newSpotImage.id,
+//     url: newSpotImage.url,
+//     preview: newSpotImage.preview,
+//   };
+
+//   res.json(result);
 // });
