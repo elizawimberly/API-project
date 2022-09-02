@@ -53,11 +53,11 @@ router.post("/", validateLogin, async (req, res, next) => {
 
   userObj.token = "";
 
-  // return res.json(userObj);
+  return res.json(userObj);
 
-  return res.json({
-    user,
-  });
+  // return res.json({
+  //   user,
+  // });
 });
 
 // Log out
