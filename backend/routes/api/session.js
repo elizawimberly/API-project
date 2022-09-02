@@ -24,25 +24,25 @@ router.post("/", validateLogin, async (req, res, next) => {
 
   const user = await User.login({ credential, password });
 
-  // if (!user) {
-  //   const err = new Error("Login failed");
-  //   err.status = 401;
-  //   err.title = "Login failed";
-  //   err.errors = ["The provided credentials were invalid."];
-  //   return next(err);
-  // }
-
   if (!user) {
-    // const err = new Error("Login failed");
-    // err.status = 401;
-    // err.title = "Login failed";
-    // err.errors = ["The provided credentials were invalid."];
-    // return next(err);
-    return res.status(401).json({
-      message: "Invalid credentials",
-      statusCode: 401,
-    });
+    const err = new Error("Login failed");
+    err.status = 401;
+    err.title = "Login failed";
+    err.errors = ["The provided credentials were invalid."];
+    return next(err);
   }
+
+  // if (!user) {
+  //   // const err = new Error("Login failed");
+  //   // err.status = 401;
+  //   // err.title = "Login failed";
+  //   // err.errors = ["The provided credentials were invalid."];
+  //   // return next(err);
+  //   return res.status(401).json({
+  //     message: "Invalid credentials",
+  //     statusCode: 401,
+  //   });
+  // }
 
   await setTokenCookie(res, user);
 
@@ -53,11 +53,11 @@ router.post("/", validateLogin, async (req, res, next) => {
 
   userObj.token = "";
 
-  return res.json(userObj);
+  // return res.json(userObj);
 
-  // return res.json({
-  //   user,
-  // });
+  return res.json({
+    user,
+  });
 });
 
 // Log out
@@ -67,24 +67,24 @@ router.delete("/", (_req, res) => {
 });
 
 // Restore session user
-router.get("/", restoreUser, (req, res) => {
-  const { user } = req;
-  if (user) {
-    user: user.toSafeObject();
-    let userObj = user.toSafeObject();
-    return res.json(userObj);
-  } else return res.json({});
-});
-
-//old working code
-// Restore session user
 // router.get("/", restoreUser, (req, res) => {
 //   const { user } = req;
 //   if (user) {
-//     return res.json({
-//       user: user.toSafeObject(),
-//     });
+//     user: user.toSafeObject();
+//     let userObj = user.toSafeObject();
+//     return res.json(userObj);
 //   } else return res.json({});
 // });
+
+//old working code
+// Restore session user
+router.get("/", restoreUser, (req, res) => {
+  const { user } = req;
+  if (user) {
+    return res.json({
+      user: user.toSafeObject(),
+    });
+  } else return res.json({});
+});
 
 module.exports = router;
