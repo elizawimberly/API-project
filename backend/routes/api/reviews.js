@@ -153,9 +153,25 @@ router.get("/current", requireAuth, async (req, res) => {
 router.put("/:reviewId", requireAuth, async (req, res) => {
   let reviewId = Number(req.params.reviewId);
 
-  let review = await Review.findByPk(reviewId);
+  const { review, stars } = req.body;
 
-  res.json({ review });
+  let reviewTarget = await Review.findByPk(reviewId);
+
+  if (!reviewTarget) {
+    return res.status(400).json({
+      message: "Review couldn't be found",
+      statusCode: 404,
+    });
+  }
+
+  reviewTarget.set({
+    review,
+    stars,
+  });
+
+  await reviewTarget.save();
+
+  res.json(reviewTarget);
 });
 
 //
