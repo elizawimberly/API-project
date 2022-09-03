@@ -44,14 +44,14 @@ router.post("/", validateLogin, async (req, res, next) => {
   //   });
   // }
 
-  await setTokenCookie(res, user);
+  let token = await setTokenCookie(res, user);
 
   let userObj = user.toJSON();
   delete userObj.hashedPassword;
   delete userObj.createdAt;
   delete userObj.updatedAt;
 
-  userObj.token = "";
+  userObj.token = token;
 
   return res.json(userObj);
 

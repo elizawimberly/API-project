@@ -26,6 +26,15 @@ router.use(express.json());
 router.post("/:reviewId/images", requireAuth, async (req, res) => {
   let reviewId = req.params.reviewId;
 
+  let review = await Review.findByPk(reviewId);
+
+  if (!review) {
+    return res.status(404).json({
+      message: "Review couldn't be found",
+      statusCode: 404,
+    });
+  }
+
   const { url } = req.body;
 
   let reviewImage = await ReviewImage.create({
@@ -47,29 +56,90 @@ router.post("/:reviewId/images", requireAuth, async (req, res) => {
 router.get("/current", requireAuth, async (req, res) => {
   userId = req.user.id;
 
-  let reviews = await Review.findAll({
+  let reviewsCollect = await Review.findAll({
     where: {
       userId: userId,
     },
     include: [
       {
         model: User,
-        // attributes: [],
+        attributes: ["id", "firstName", "lastName"],
       },
       {
         model: Spot,
-        // attributes: ["url", "preview"],
+        attributes: {
+          exclude: ["createdAt", "updatedAt"],
+        },
       },
       {
         model: ReviewImage,
-        // attributes: ["url", "preview"],
+        attributes: ["id", "url"],
       },
     ],
   });
 
-  res.json({
-    reviews,
+  //iterate over reviews
+  //for each review get the spot
+  //for each spot, find the SpotImages
+  let spotImageArr = [];
+
+  let Reviews = [];
+
+  for (let review of reviewsCollect) {
+    let spotId = review.Spot.id;
+    // review.spotImages = [];
+    // console.log(spotId);
+    let spotImages = await SpotImage.findAll({
+      where: {
+        spotId: spotId,
+      },
+      // raw: true,
+    });
+    let reviewObj = review.toJSON();
+    reviewObj.spotImages = [];
+    // console.log(spotImages);
+    spotImages.forEach((image) => {
+      // console.log(image);
+      let imageObj = image.toJSON();
+      // console.log(imageObj);
+      spotImageArr.push(imageObj);
+      reviewObj.spotImages.push(imageObj);
+    });
+    // review.spotImages.push(spotImages);
+    // review.spotImages = spotImages;
+    Reviews.push(reviewObj);
+  }
+
+  // console.log(Reviews);
+
+  // for (let review of reviews) {
+  //   for (let image of review.ReviewImages) {
+  //     // console.log(image);
+  //     imageObj = image.toJSON();
+  //     // if (imageObj) console.log(imageObj);
+  //   }
+  // }
+
+  Reviews.forEach((review) => {
+    review.spotImages.forEach((image) => {
+      // console.log(image);
+      if (image.preview === true) {
+        review.Spot.previewImage = image.url;
+      }
+    });
+    if (!review.Spot.previewImage) {
+      review.Spot.previewImage = null;
+    }
+    delete review.spotImages;
   });
+
+  res.json({
+    Reviews,
+  });
+
+  // res.json({
+  //   reviews,
+  // });
 });
 
 //

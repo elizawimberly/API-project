@@ -542,75 +542,156 @@ router.put("/:spotId", async (req, res) => {
   res.json(spot);
 });
 
+//CODE TO TEST CREATE REVIEW FOR SPOT --- NOT OFFICIAL
+// //CREATE A REVIEW FOR A SPOT
+// //postman route: {{url}}/spots/{{spotId}}/reviews
+// router.post("/:spotId/reviews", requireAuth, async (req, res) => {
+//   // let userId = req.user.id;
+//   // let spotId = Number(req.params.spotId);
+//   // const { review, stars } = req.body;
+
+//   // let spot = await Spot.findByPk(spotId);
+
+//   // if (!spot) {
+//   //   return res.status(404).json({
+//   //     message: "Spot couldn't be found",
+//   //     statusCode: 404,
+//   //   });
+//   // }
+
+//   //testing code
+//   // let reviews = await Review.findAll();
+//   // console.log(reviews);
+//   //end testing code
+
+//   // let matchingReviews = await Review.findAll({
+//   //   where: {
+//   //     userId: userId,
+//   //     spotId: spotId,
+//   //   },
+//   // });
+
+//   // console.log("MATCHING REIVEWS", matchingReviews);
+
+//   // if (matchingReviews.length > 0) {
+//   //   return res.status(403).json({
+//   //     message: "User already has a review for this spot",
+//   //     statusCode: 403,
+//   //   });
+//   // }
+
+//   // if (!review) {
+//   //   return res.status(400).json({
+//   //     message: "Validation Error",
+//   //     statusCode: 400,
+//   //     errors: {
+//   //       review: "Review text is required",
+//   //     },
+//   //   });
+//   // }
+
+//   // if (stars < 1 || stars > 5) {
+//   //   return res.status(400).json({
+//   //     message: "Validation Error",
+//   //     statusCode: 400,
+//   //     errors: {
+//   //       stars: "Stars must be an integer from 1 to 5",
+//   //     },
+//   //   });
+//   // }
+
+//   // let newReview = await Review.create({
+//   //   spotId,
+//   //   userId,
+//   //   review,
+//   //   stars,
+//   // });
+
+//   // res.status(201).json(newReview);
+
+//   res.json("success");
+// });
+
 //
 //
 //
 //
 //
 //
+// //this works!!! 0FFICIAL -----DO NOT CHANGE
+// //CREATE A REVIEW FOR A SPOT
+// //postman route: {{url}}/spots/{{spotId}}/reviews
+// router.post("/:spotId/reviews", requireAuth, async (req, res) => {
+//   let userId = req.user.id;
+//   let spotId = Number(req.params.spotId);
+//   const { review, stars } = req.body;
+
+//   let spot = await Spot.findByPk(spotId);
+
+//   if (!spot) {
+//     return res.status(404).json({
+//       message: "Spot couldn't be found",
+//       statusCode: 404,
+//     });
+//   }
+
+//   //testing code
+//   // let reviews = await Review.findAll();
+//   // console.log(reviews);
+//   //end testing code
+
+//   let matchingReviews = await Review.findAll({
+//     where: {
+//       userId: userId,
+//       spotId: spotId,
+//     },
+//   });
+
+//   console.log("MATCHING REIVEWS", matchingReviews);
+
+//   if (matchingReviews.length > 0) {
+//     return res.status(403).json({
+//       message: "User already has a review for this spot",
+//       statusCode: 403,
+//     });
+//   }
+
+//   if (!review) {
+//     return res.status(400).json({
+//       message: "Validation Error",
+//       statusCode: 400,
+//       errors: {
+//         review: "Review text is required",
+//       },
+//     });
+//   }
+
+//   if (stars < 1 || stars > 5) {
+//     return res.status(400).json({
+//       message: "Validation Error",
+//       statusCode: 400,
+//       errors: {
+//         stars: "Stars must be an integer from 1 to 5",
+//       },
+//     });
+//   }
+
+//   let newReview = await Review.create({
+//     spotId,
+//     userId,
+//     review,
+//     stars,
+//   });
+
+//   res.status(201).json(newReview);
+// });
+
 //
-//CREATE A REVIEW FOR A SPOT
-//postman route: {{url}}/spots/{{spotId}}/reviews
-router.post("/:spotId/reviews", requireAuth, async (req, res) => {
-  let userId = req.user.id;
-  let spotId = Number(req.params.spotId);
-  const { review, stars } = req.body;
-
-  let spot = await Spot.findByPk(spotId);
-
-  if (!spot) {
-    return res.status(404).json({
-      message: "Spot couldn't be found",
-      statusCode: 404,
-    });
-  }
-
-  let matchingReviews = await Review.findAll({
-    where: {
-      userId: userId,
-      spotId: spotId,
-    },
-  });
-
-  console.log("MATCHING REIVEWS", matchingReviews);
-
-  if (matchingReviews.length > 0) {
-    return res.status(403).json({
-      message: "User already has a review for this spot",
-      statusCode: 403,
-    });
-  }
-
-  if (!review) {
-    return res.status(400).json({
-      message: "Validation Error",
-      statusCode: 400,
-      errors: {
-        review: "Review text is required",
-      },
-    });
-  }
-
-  if (stars < 1 || stars > 5) {
-    return res.status(400).json({
-      message: "Validation Error",
-      statusCode: 400,
-      errors: {
-        stars: "Stars must be an integer from 1 to 5",
-      },
-    });
-  }
-
-  let newReview = await Review.create({
-    spotId,
-    userId,
-    review,
-    stars,
-  });
-
-  res.status(201).json(newReview);
-});
-
+//
+//
+//
+//
+//
 //DELETE A SPOT
 router.delete("/:spotId", requireAuth, async (req, res) => {
   let spotId = req.params.spotId;
