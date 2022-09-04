@@ -43,6 +43,23 @@ const validateSignup = [
 // }
 router.post("/", validateSignup, async (req, res) => {
   const { email, password, username, firstName, lastName } = req.body;
+
+  let userWithSameEmail = await User.findOne({
+    where: {
+      email: email,
+    },
+  });
+
+  if (userWithSameEmail) {
+    return res.status(403).json({
+      message: "User already exists",
+      statusCode: 403,
+      errors: {
+        email: "User with that email already exists",
+      },
+    });
+  }
+
   const user = await User.signup({
     email,
     username,

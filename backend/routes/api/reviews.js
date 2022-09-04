@@ -78,6 +78,13 @@ router.get("/current", requireAuth, async (req, res) => {
     ],
   });
 
+  if (reviewCollect.length === 0) {
+    return res.status(404).json({
+      message: "There are no reviews found",
+      statusCode: 404,
+    });
+  }
+
   //iterate over reviews
   //for each review get the spot
   //for each spot, find the SpotImages
