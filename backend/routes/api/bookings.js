@@ -28,20 +28,29 @@ router.get("/current", requireAuth, async (req, res) => {
   userId = req.user.id;
   console.log("current user id", userId);
 
-  //remove this
-  // await Booking.create({
-  //   spotId: 3,
-  //   userId: 4,
-  //   startDate: new Date("2023-01-10"),
-  //   endDate: new Date("2023-01-15"),
-  // });
-
   let currentBookings = await Booking.findAll({
     where: {
       userId: userId,
     },
   });
-  res.json(currentBookings);
+
+  let bookingResult = [];
+
+  for (let booking of currentBookings) {
+    let spot = await booking.getSpot({
+      attributes: {
+        exclude: ["description", "createdAt", "updatedAt"],
+      },
+    });
+    let spotImage = spot.getSpotImages;
+    let spotObj = spot.toJSON();
+    let bookingObj = booking.toJSON();
+    bookingObj.Spot = spotObj;
+    bookingResult.push(bookingObj);
+  }
+
+  // Bookings = currentBookings;
+  res.json({ Bookings: bookingResult });
 });
 
 //

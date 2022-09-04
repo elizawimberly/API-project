@@ -29,6 +29,21 @@ module.exports = {
           url: "https://commons.wikimedia.org/wiki/File:Samuel-Novarro_House_West_Facade_2.jpg",
           preview: true,
         },
+        {
+          spotId: 1,
+          url: "https://commons.wikimedia.org/wiki/File:Ennis_House_front_view_2006.jpg",
+          preview: false,
+        },
+        {
+          spotId: 2,
+          url: "https://commons.wikimedia.org/wiki/File:Ennis_house._(3484341687).jpg",
+          preview: false,
+        },
+        {
+          spotId: 3,
+          url: "https://commons.wikimedia.org/wiki/File:Samuel-Novarro_House_West_Facade_Entrance.jpg",
+          preview: false,
+        },
       ],
       {}
     );
