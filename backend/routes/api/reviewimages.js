@@ -29,9 +29,19 @@ router.delete("/:reviewImageId", requireAuth, async (req, res) => {
 
   let reviewImage = await ReviewImage.findByPk(reviewImageId);
 
+  if (!reviewImage) {
+    return res.status(404).json({
+      message: "Review Image couldn't be found",
+      statusCode: 404,
+    });
+  }
+
   await reviewImage.destroy();
 
-  res.json(reviewImage);
+  res.json({
+    message: "Successfully deleted",
+    statusCode: 200,
+  });
 });
 
 //

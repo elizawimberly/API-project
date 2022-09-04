@@ -66,25 +66,24 @@ router.delete("/", (_req, res) => {
   return res.json({ message: "success" });
 });
 
+router.get("/", restoreUser, (req, res) => {
+  const { user } = req;
+  let userObj = user.toSafeObject();
+
+  if (user) {
+    return res.json(userObj);
+  } else return res.json({});
+});
+
+//old working code
 // Restore session user
 // router.get("/", restoreUser, (req, res) => {
 //   const { user } = req;
 //   if (user) {
-//     user: user.toSafeObject();
-//     let userObj = user.toSafeObject();
-//     return res.json(userObj);
+//     return res.json({
+//       user: user.toSafeObject(),
+//     });
 //   } else return res.json({});
 // });
-
-//old working code
-// Restore session user
-router.get("/", restoreUser, (req, res) => {
-  const { user } = req;
-  if (user) {
-    return res.json({
-      user: user.toSafeObject(),
-    });
-  } else return res.json({});
-});
 
 module.exports = router;

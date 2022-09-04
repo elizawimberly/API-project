@@ -24,6 +24,46 @@ router.use(express.json());
 //
 //GET ALL SPOTS
 router.get("/", async (req, res) => {
+  let { page, size } = req.query;
+
+  let hasPagination = false;
+
+  if (page && size) {
+    hasPagination = true;
+  }
+
+  let pagination = {};
+
+  page = Number(page);
+  size = Number(size);
+
+  if (!page) {
+    page = 1;
+  }
+
+  if (page < 1) {
+    page = 1;
+  }
+
+  if (page > 10) {
+    page = 10;
+  }
+
+  if (!size) {
+    size = 20;
+  }
+
+  if (size < 1) {
+    size = 1;
+  }
+
+  if (size > 20) {
+    size = 20;
+  }
+
+  pagination.limit = size;
+  pagination.offset = size * (page - 1);
+
   const spots = await Spot.findAll({
     include: [
       {
@@ -31,13 +71,23 @@ router.get("/", async (req, res) => {
         attributes: ["url", "preview"],
       },
     ],
+    ...pagination,
   });
 
   let result = [];
 
   for (let Spot of spots) {
     let reviews = await Spot.getReviews({
-      attributes: [[sequelize.fn("AVG", sequelize.col("stars")), "avgRating"]],
+      //   attributes: [[sequelize.fn("AVG", sequelize.col("stars")), "avgRating"]],
+      // });
+      //refactoring to round average:
+
+      attributes: [
+        [
+          sequelize.fn("ROUND", sequelize.fn("AVG", sequelize.col("stars"))),
+          "avgRating",
+        ],
+      ],
     });
     console.log(reviews);
     let spotObj = Spot.toJSON();
@@ -59,13 +109,6 @@ router.get("/", async (req, res) => {
     newResult.push(spotList);
   }
 
-  // let spotsList = [];
-  // spots.forEach((spot) => {
-  //   spotsList.push(spot);
-  // });
-
-  // console.log(spotsList);
-
   //IMPORTANT CODE FROM ALEC LECTURE
   // use nested looping to iterate over all spot images for each spot
   newResult.forEach((spot) => {
@@ -85,6 +128,14 @@ router.get("/", async (req, res) => {
   });
 
   // res.json(spotsList);
+  if (hasPagination) {
+    return res.json({
+      Spots: newResult,
+      page: page,
+      size: size,
+    });
+  }
+
   res.json({ Spots: newResult });
 });
 
@@ -542,76 +593,6 @@ router.put("/:spotId", async (req, res) => {
   res.json(spot);
 });
 
-//CODE TO TEST CREATE REVIEW FOR SPOT --- NOT OFFICIAL
-// //CREATE A REVIEW FOR A SPOT
-// //postman route: {{url}}/spots/{{spotId}}/reviews
-// router.post("/:spotId/reviews", requireAuth, async (req, res) => {
-//   // let userId = req.user.id;
-//   // let spotId = Number(req.params.spotId);
-//   // const { review, stars } = req.body;
-
-//   // let spot = await Spot.findByPk(spotId);
-
-//   // if (!spot) {
-//   //   return res.status(404).json({
-//   //     message: "Spot couldn't be found",
-//   //     statusCode: 404,
-//   //   });
-//   // }
-
-//   //testing code
-//   // let reviews = await Review.findAll();
-//   // console.log(reviews);
-//   //end testing code
-
-//   // let matchingReviews = await Review.findAll({
-//   //   where: {
-//   //     userId: userId,
-//   //     spotId: spotId,
-//   //   },
-//   // });
-
-//   // console.log("MATCHING REIVEWS", matchingReviews);
-
-//   // if (matchingReviews.length > 0) {
-//   //   return res.status(403).json({
-//   //     message: "User already has a review for this spot",
-//   //     statusCode: 403,
-//   //   });
-//   // }
-
-//   // if (!review) {
-//   //   return res.status(400).json({
-//   //     message: "Validation Error",
-//   //     statusCode: 400,
-//   //     errors: {
-//   //       review: "Review text is required",
-//   //     },
-//   //   });
-//   // }
-
-//   // if (stars < 1 || stars > 5) {
-//   //   return res.status(400).json({
-//   //     message: "Validation Error",
-//   //     statusCode: 400,
-//   //     errors: {
-//   //       stars: "Stars must be an integer from 1 to 5",
-//   //     },
-//   //   });
-//   // }
-
-//   // let newReview = await Review.create({
-//   //   spotId,
-//   //   userId,
-//   //   review,
-//   //   stars,
-//   // });
-
-//   // res.status(201).json(newReview);
-
-//   res.json("success");
-// });
-
 //
 //
 //
@@ -822,14 +803,43 @@ router.post("/:spotId/bookings", requireAuth, async (req, res) => {
 //GET ALL BOOKINGS FOR A SPOT BY ID
 //postman path:   {{url}}/spots/{{spotId}}/bookings
 router.get("/:spotId/bookings", requireAuth, async (req, res) => {
+  let userId = req.user.id;
+
+  // let userId = 1;
+
   spotId = req.params.spotId;
+
+  let spot = await Spot.findByPk(spotId);
+
+  if (!spot) {
+    return res.status(404).json({
+      message: "Spot couldn't be found",
+      statusCode: 404,
+    });
+  }
+
+  let ownerId = spot.ownerId;
+
+  if (userId === ownerId) {
+    let bookings = await Booking.findAll({
+      where: {
+        spotId: spotId,
+      },
+      include: {
+        model: User,
+        attributes: ["id", "firstName", "lastName"],
+      },
+    });
+    return res.json({ Bookings: bookings });
+  }
 
   let bookings = await Booking.findAll({
     where: {
       spotId: spotId,
     },
+    attributes: ["spotId", "startDate", "endDate"],
   });
-  res.json(bookings);
+  return res.json({ Bookings: bookings });
 });
 
 //end
@@ -840,216 +850,3 @@ router.get("/:spotId/bookings", requireAuth, async (req, res) => {
 //end
 //end
 module.exports = router;
-
-//implementation using sequelize literal
-//GET ALL SPOTS
-// router.get("/", async (req, res) => {
-//   const spots = await Spot.findAll({
-//     attributes: {
-//       include: [
-//         [
-//           sequelize.literal(
-//             `(SELECT AVG(stars)
-//                     FROM reviews AS review
-//                     WHERE review.spotId = spot.id)`
-//           ),
-//           "avgRating",
-//         ],
-//         [
-//           sequelize.literal(
-//             `(SELECT url
-//                     FROM spotImages AS spotImage
-//                     WHERE spotImage.spotId = spot.id
-//                     AND preview = true)`
-//           ),
-//           "previewImage",
-//         ],
-//       ],
-//     },
-//   });
-
-//   res.json({
-//     Spots: spots,
-//   });
-// });
-
-// router.get("/", async (req, res) => {
-//   const allSpots = await Spot.findAll({
-//     include: [
-//       {
-//         model: Review,
-//         attributes: [],
-//       },
-//       {
-//         model: SpotImage,
-//         attributes: ["url"],
-//       },
-//     ],
-//     attributes: {
-//       include: [[sequelize.fn("AVG", sequelize.col("stars")), "avgRating"]],
-//     },
-//     group: ["Spot.id"],
-//     raw: true,
-//   });
-//   res.json(allSpots);
-// });
-
-//OLD IMPLEMENTATION OF GET ALL SPOTS:
-// router.get("/", async (req, res) => {
-//   let Spots = await Spot.findAll({
-//     //for loop or for of works to iterate- use await here
-//     //review.count and review.sum
-//     //const findReview = await spot.getReviews({
-//     //       attributes: [
-//     //         [sequelize.fn("AVG", sequelize.col("stars")), "avgRating"]
-//     // gotta kinda do ssomething like this
-//     // to get your average reviews
-//     //
-//     //
-//     //
-//     //
-//     //
-//     // include: [
-//     //   {
-//     //     model: Review,
-//     //     // attributes: [
-//     //     //   [sequelize.fn("AVG", sequelize.col("Reviews.stars")), "avgRating"],
-//     //     // ],
-//     //     attributes: [
-//     //       [sequelize.fn("AVG", sequelize.col("Reviews.stars")), "avgRating"],
-//     //     ],
-//     //   },
-//     // {
-//     //   model: SpotImage,
-//     //   attributes: ["url"],
-//     // },
-//     // ],
-//     // attributes: [
-//     //   "id",
-//     //   "ownerId",
-//     //   "address",
-//     //   "city",
-//     //   "state",
-//     //   "country",
-//     //   "lat",
-//     //   "lng",
-//     //   "name",
-//     //   "description",
-//     //   "price",
-//     //   "createdAt",
-//     //   "updatedAt",
-//     //   [sequelize.fn("AVG", sequelize.col("Reviews.stars")), "avgRating"],
-//     // ],
-//   });
-//   res.json({ Spots });
-// });
-
-//try using raw:true on get all spots for current user
-
-///////notes for get all spots:
-//for loop or for of works to iterate- use await here
-//review.count and review.sum
-//const findReview = await spot.getReviews({
-//       attributes: [
-//         [sequelize.fn("AVG", sequelize.col("stars")), "avgRating"]
-// gotta kinda do ssomething like this
-// to get your average reviews
-
-// for (let i = 0; i < spots.length; i++) {
-//   let currentSpot = spots[i];
-//   let reviews = await currentSpot.getReviews();
-//   result.push(reviews);
-// }
-
-//OLD CODE:
-//GET SPOTS OF CURRENT USER
-// router.get("/current", requireAuth, async (req, res) => {
-//   let userId = req.user.id;
-
-//   const spots = await Spot.findAll({
-//     where: {
-//       ownerId: userId,
-//     },
-//     include: [
-//       {
-//         model: Review,
-//         // attributes: [],
-//       },
-//       {
-//         model: SpotImage,
-//         // attributes: ["url", "preview"],
-//       },
-//     ],
-//   });
-
-//   let spotsList = [];
-//   spots.forEach((spot) => {
-//     spotsList.push(spot.toJSON());
-//   });
-
-//   // use nested looping to iterate over all spot images for each spot
-//   spotsList.forEach((spot) => {
-//     spot.SpotImages.forEach((image) => {
-//       //check if each image has a preview prop of true
-//       if (image.preview === true) {
-//         //if the image is true, creat a new prop on spot
-//         spot.previewImage = image.url;
-//       }
-//     });
-//     //check if each spot has a previewImage property, if not add one
-//     if (!spot.previewImage) {
-//       spot.previewImage = null;
-//     }
-//     //remove SpotImage prop from each spot object
-//     delete spot.SpotImages;
-//   });
-
-//   // res.json(spotsList);
-//   res.json(spotsList);
-// });
-
-//SAVED FRIDAY
-//CREATE AN IMAGE FOR A SPOT
-//I need to refactor after postman route body got updated with previewImage prop
-// {
-//   "url": "image.url",
-//   "previewImage": true //or false
-// }
-// router.post("/:spotId/images", requireAuth, async (req, res) => {
-//   let user = req.user.id;
-
-//   let spotId = Number(req.params.spotId);
-
-//   let spot = await Spot.findByPk(spotId);
-
-//   console.log("here is the spot info:", spot);
-
-//   if (!spot) {
-//     return res.status(404).json({
-//       message: "Spot couldn't be found",
-//       statusCode: 404,
-//     });
-//   }
-
-//   const { url, preview } = req.body;
-
-//   let newSpotImage = await SpotImage.create({
-//     spotId,
-//     url,
-//     preview,
-//   });
-
-//   if (!newSpotImage.preview) {
-//     newSpotImage.preview = null;
-//   }
-
-//   let newObj = newSpotImage.toJSON();
-
-//   let result = {
-//     id: newSpotImage.id,
-//     url: newSpotImage.url,
-//     preview: newSpotImage.preview,
-//   };
-
-//   res.json(result);
-// });

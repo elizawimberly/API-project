@@ -26,6 +26,7 @@ router.use(express.json());
 //GET ALL CURRENT USERS BOOKINGS
 router.get("/current", requireAuth, async (req, res) => {
   userId = req.user.id;
+
   console.log("current user id", userId);
 
   let currentBookings = await Booking.findAll({
@@ -42,10 +43,24 @@ router.get("/current", requireAuth, async (req, res) => {
         exclude: ["description", "createdAt", "updatedAt"],
       },
     });
-    let spotImage = spot.getSpotImages;
+    let spotImages = await spot.getSpotImages();
+
+    // console.log(spotImages);
     let spotObj = spot.toJSON();
     let bookingObj = booking.toJSON();
     bookingObj.Spot = spotObj;
+    //iterate over spot images , make it json, check for previewImage
+    for (let image of spotImages) {
+      let imageObj = image.toJSON();
+      if (imageObj.preview === true) {
+        bookingObj.Spot.previewImage = imageObj.url;
+      }
+      // console.log(imageObj);
+    }
+    if (!bookingObj.Spot.previewImage) {
+      bookingObj.Spot.previewImage = null;
+    }
+
     bookingResult.push(bookingObj);
   }
 
@@ -69,6 +84,13 @@ router.put("/:bookingId", requireAuth, async (req, res) => {
 
   let booking = await Booking.findByPk(id);
 
+  if (!booking) {
+    return res.status(404).json({
+      message: "Booking couldn't be found",
+      statusCode: 404,
+    });
+  }
+
   booking.set({
     startDate: new Date(startDate),
     endDate: new Date(endDate),
@@ -76,7 +98,7 @@ router.put("/:bookingId", requireAuth, async (req, res) => {
 
   await booking.save();
 
-  res.json({ booking });
+  res.json(booking);
 });
 
 //
@@ -91,9 +113,19 @@ router.delete("/:bookingId", requireAuth, async (req, res) => {
 
   let booking = await Booking.findByPk(bookingId);
 
+  if (!booking) {
+    return res.status(404).json({
+      message: "Booking couldn't be found",
+      statusCode: 404,
+    });
+  }
+
   await booking.destroy();
 
-  res.json(booking);
+  res.json({
+    message: "Successfully deleted",
+    statusCode: 200,
+  });
 });
 
 //
