@@ -89,10 +89,10 @@ router.get("/", async (req, res) => {
         ],
       ],
     });
-    console.log(reviews);
+    // console.log(reviews);
     let spotObj = Spot.toJSON();
     spotObj.reviews = reviews;
-    console.log(spotObj.reviews[0]);
+    // console.log(spotObj.reviews[0]);
     // spotObj.avgRating = reviews.[0].avgRating;
     result.push(spotObj);
   }
@@ -104,7 +104,7 @@ router.get("/", async (req, res) => {
     let average = spotList.reviews[0].toJSON();
     spotList.avgRating = average.avgRating;
     delete spotList.reviews; ///*****ADD THIS CODE BACK */
-    console.log(average);
+    // console.log(average);
     // newResult.push(List.reviews[0]);
     newResult.push(spotList);
   }
@@ -258,7 +258,7 @@ router.get("/:spotId", requireAuth, async (req, res) => {
     attributes: ["id", "url", "preview"],
   });
 
-  console.log(spotImages);
+  // console.log(spotImages);
   delete spotObj.SpotImages;
 
   spotObj.SpotImages = spotImages;
@@ -417,7 +417,7 @@ router.post("/:spotId/images", requireAuth, async (req, res) => {
 
   let spot = await Spot.findByPk(spotId);
 
-  console.log("here is the spot info:", spot);
+  // console.log("here is the spot info:", spot);
 
   if (!spot) {
     return res.status(404).json({
@@ -628,7 +628,7 @@ router.post("/:spotId/reviews", requireAuth, async (req, res) => {
     },
   });
 
-  console.log("MATCHING REIVEWS", matchingReviews);
+  // console.log("MATCHING REIVEWS", matchingReviews);
 
   if (matchingReviews.length > 0) {
     return res.status(403).json({
