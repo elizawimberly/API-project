@@ -7,17 +7,28 @@ import SingleSpot from "../SingleSpot";
 
 const AllSpots = () => {
   const dispatch = useDispatch();
-  const allSpots = useSelector((state) => state.spots.allSpots);
+  const spots = useSelector((state) => state.spots);
+  const { allSpots } = spots;
 
   useEffect(() => {
     dispatch(getAllSpots());
   }, [dispatch]);
 
+  console.log("allspots componenet running");
+
+  const test = Object.keys(allSpots);
+  console.log(test, "test");
+
+  if (Object.keys(allSpots).length === 0) {
+    console.log("allspots null");
+    return null;
+  }
+
   return (
     <div>
       {Object.values(allSpots).map((spot) => (
         <div key={spot.id}>
-          {spot.address}
+          {/* {spot.address} */}
           <SingleSpot spot={spot}></SingleSpot>
         </div>
       ))}
