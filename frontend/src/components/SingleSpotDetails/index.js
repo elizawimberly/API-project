@@ -3,6 +3,7 @@ import { useState, useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { useParams } from "react-router-dom";
 import { NavLink } from "react-router-dom";
+import { useHistory } from "react-router-dom";
 import { getAllSpots } from "../../store/spots";
 import { getSpotById } from "../../store/spots";
 import DeleteSpot from "../DeleteSpot";
@@ -10,6 +11,8 @@ import EditSpotForm from "../EditSpotForm";
 
 const SingleSpotDetails = () => {
   const dispatch = useDispatch();
+  const history = useHistory();
+
   // const allSpots = useSelector((state) => state.spots.allSpots);
 
   const spots = useSelector((state) => state.spots);
@@ -36,6 +39,11 @@ const SingleSpotDetails = () => {
     ownerLoggedIn = true;
   }
 
+  const handleDelete = (e) => {
+    e.preventDefault();
+    history.push(`/`);
+  };
+
   return (
     <div>
       <div>{singleSpot.description}</div>
@@ -46,7 +54,14 @@ const SingleSpotDetails = () => {
       <div>
         <img src={singleSpot.SpotImages[0].url} alt="spotPhoto" />
       </div>
-      <div>{ownerLoggedIn && <DeleteSpot spot={singleSpot}></DeleteSpot>}</div>
+      {/* <div>{ownerLoggedIn && <DeleteSpot spot={singleSpot}></DeleteSpot>}</div> */}
+      <div>
+        {ownerLoggedIn && (
+          <div onClick={handleDelete}>
+            <DeleteSpot></DeleteSpot>
+          </div>
+        )}
+      </div>
 
       <div>
         <NavLink key={singleSpot.id} to={`/spots/${singleSpot.id}/edit`}>

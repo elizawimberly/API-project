@@ -22,9 +22,9 @@ const getSpotByIdAction = (payload) => {
   };
 };
 
-const updateSpotAction = (payload) => {
+const deleteSpotByIdAction = (payload) => {
   return {
-    type: UPDATE_SPOT,
+    type: DELETE_SPOT,
     payload,
   };
 };
@@ -67,17 +67,56 @@ export const updateSpot = (data, id) => async (dispatch) => {
   }
 };
 
+//DELETE
+export const deleteSpot = (id) => async (dispatch) => {
+  const res = await csrfFetch(`/api/spots/${id}`, {
+    method: "DELETE",
+  });
+
+  if (res.ok) {
+    dispatch(deleteSpotByIdAction(id));
+  }
+};
+
+//
+//
+//
 //ESTABLISH STATE
 // const initialState = { spots: {} };
 const initialState = { allSpots: {}, singleSpot: {} };
 
+// const spotsReducer = (state = initialState, action) => {
+//   // let newState;
+//   switch (action.type) {
+//     case GET_ALL_SPOTS:
+//       // console.log(state);
+//       // const newState = { ...state, spots: { ...state.spots } };
+//       const newState = { ...state };
+//       // console.log("newState", newState);
+//       // newState = { ...state };
+//       action.payload.Spots.forEach(
+//         (spot) => (newState.allSpots[spot.id] = spot)
+//       );
+//       return newState;
+//     case GET_SPOT_BY_ID:
+//       const newStateObj = { ...state };
+//       newStateObj.singleSpot = { ...action.payload };
+//       return newStateObj;
+
+//     // case DELETE_SPOT:
+
+//     default:
+//       return state;
+//   }
+// };
+
 const spotsReducer = (state = initialState, action) => {
-  // let newState;
+  const newState = { ...state };
   switch (action.type) {
     case GET_ALL_SPOTS:
       // console.log(state);
       // const newState = { ...state, spots: { ...state.spots } };
-      const newState = { ...state };
+
       // console.log("newState", newState);
       // newState = { ...state };
       action.payload.Spots.forEach(
@@ -85,9 +124,12 @@ const spotsReducer = (state = initialState, action) => {
       );
       return newState;
     case GET_SPOT_BY_ID:
-      const newStateObj = { ...state };
-      newStateObj.singleSpot = { ...action.payload };
-      return newStateObj;
+      newState.singleSpot = { ...action.payload };
+      return newState;
+
+    case DELETE_SPOT:
+      delete newState[action.payload];
+      return newState;
 
     default:
       return state;
