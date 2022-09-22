@@ -4,9 +4,11 @@ import { useDispatch, useSelector } from "react-redux";
 import { getSpotById } from "../../store/spots";
 import { useParams } from "react-router-dom";
 import { updateSpot } from "../../store/spots";
+import { useHistory } from "react-router-dom";
 
 const EditSpotForm = ({ spot }) => {
   const dispatch = useDispatch();
+  const history = useHistory();
   // const allSpots = useSelector((state) => state.spots.allSpots);
 
   const spots = useSelector((state) => state.spots);
@@ -36,8 +38,12 @@ const EditSpotForm = ({ spot }) => {
   const [city, setCity] = useState(singleSpot?.city);
   const [state, setState] = useState(singleSpot?.state);
   const [country, setCountry] = useState(singleSpot?.country);
-  const [lat, setLat] = useState(singleSpot?.lat);
-  const [lng, setLng] = useState(singleSpot?.lng);
+  // const [lat, setLat] = useState(singleSpot?.lat);
+  const [lat, setLat] = useState(30.55);
+
+  // const [lng, setLng] = useState(singleSpot?.lng);
+  const [lng, setLng] = useState(-150.5);
+
   const [description, setDescription] = useState(singleSpot?.description);
   const [price, setPrice] = useState(singleSpot?.price);
 
@@ -73,6 +79,7 @@ const EditSpotForm = ({ spot }) => {
     //await dispatch() make action here!!!
     const updatedSpot = await dispatch(updateSpot(payload, spotId));
     console.log("updatedSpot from editSpotForm", updatedSpot);
+    history.push(`/spots/${spotId}`);
   };
 
   if (Object.keys(singleSpot).length === 0) {
@@ -123,14 +130,14 @@ const EditSpotForm = ({ spot }) => {
               onChange={updateCountry}
             />
           </label>
-          <label>
+          {/* <label>
             Latitude
             <input type="number" required value={lat} onChange={updateLat} />
           </label>
           <label>
             Longitude
             <input type="number" required value={lng} onChange={updateLng} />
-          </label>
+          </label> */}
           <label>
             Description
             <input

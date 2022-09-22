@@ -13,6 +13,7 @@ const SingleSpotDetails = () => {
   // const allSpots = useSelector((state) => state.spots.allSpots);
 
   const spots = useSelector((state) => state.spots);
+  const user = useSelector((state) => state.session.user);
   const { singleSpot } = spots;
 
   const { spotId } = useParams();
@@ -21,21 +22,19 @@ const SingleSpotDetails = () => {
     dispatch(getSpotById(spotId));
   }, [dispatch, spotId]);
 
-  // console.log("allSpots", allSpots);
-  // console.log("spotId", spotId);
-  // console.log("allspots[1]", allSpots["1"]);
-
-  // const targetSpot = allSpots[spotId];
-
-  // console.log("targetSpot", targetSpot);
-
   if (Object.keys(singleSpot).length === 0) {
     console.log("singleSpot null");
     return null;
   }
 
-  // console.log("singleSpot", singleSpot);
-  // console.log("singleSpot images", singleSpot.SpotImages[0].url);
+  let ownerLoggedIn = false;
+
+  console.log("singleSpot:", singleSpot);
+  console.log("user:", user);
+
+  if (singleSpot.ownerId === user.id) {
+    ownerLoggedIn = true;
+  }
 
   return (
     <div>
@@ -47,9 +46,7 @@ const SingleSpotDetails = () => {
       <div>
         <img src={singleSpot.SpotImages[0].url} alt="spotPhoto" />
       </div>
-      <div>
-        <DeleteSpot spot={singleSpot}></DeleteSpot>
-      </div>
+      <div>{ownerLoggedIn && <DeleteSpot spot={singleSpot}></DeleteSpot>}</div>
 
       <div>
         <NavLink key={singleSpot.id} to={`/spots/${singleSpot.id}/edit`}>
