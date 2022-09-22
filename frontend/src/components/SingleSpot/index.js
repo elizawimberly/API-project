@@ -4,8 +4,6 @@ import { useDispatch, useSelector } from "react-redux";
 import { NavLink } from "react-router-dom";
 
 const SingleSpot = ({ spot }) => {
-  console.log("spot from SingleSpot", spot);
-
   return (
     // <NavLink key={pokemon.name} to={`/pokemon/${pokemon.id}`}>
     <NavLink key={spot.id} to={`/spots/${spot.id}`}>

@@ -5,40 +5,42 @@ import { getSpotById } from "../../store/spots";
 import { useParams } from "react-router-dom";
 import { updateSpot } from "../../store/spots";
 import { useHistory } from "react-router-dom";
+import { createSpot } from "../../store/spots";
 
-const EditSpotForm = ({ spot }) => {
+const CreateSpotForm = ({ spot }) => {
   const dispatch = useDispatch();
   const history = useHistory();
 
-  const spots = useSelector((state) => state.spots);
-  const { singleSpot } = spots;
+  const user = useSelector((state) => state.session.user);
 
-  const { spotId } = useParams();
+  // useEffect(() => {
+  //   dispatch(getSpotById(spotId));
+  // }, [dispatch, spotId]);
 
-  const [name, setName] = useState(singleSpot?.name);
+  const [name, setName] = useState("");
+  // console.log("checking name singleSpot.name:", singleSpot?.name);
+  // console.log("checking name name:", name);
 
-  const [address, setAddress] = useState(singleSpot?.address);
-  const [city, setCity] = useState(singleSpot?.city);
-  const [state, setState] = useState(singleSpot?.state);
-  const [country, setCountry] = useState(singleSpot?.country);
+  const [address, setAddress] = useState("");
+  const [city, setCity] = useState("");
+  const [state, setState] = useState("");
+  const [country, setCountry] = useState("");
   const [lat, setLat] = useState(30.55);
   const [lng, setLng] = useState(-150.5);
-  const [description, setDescription] = useState(singleSpot?.description);
-  const [price, setPrice] = useState(singleSpot?.price);
+  const [description, setDescription] = useState("");
+  const [price, setPrice] = useState("");
 
   const updateName = (e) => setName(e.target.value);
   const updateAddress = (e) => setAddress(e.target.value);
   const updateCity = (e) => setCity(e.target.value);
   const updateState = (e) => setState(e.target.value);
   const updateCountry = (e) => setCountry(e.target.value);
-  const updateLat = (e) => setLat(e.target.value);
-  const updateLng = (e) => setLng(e.target.value);
   const updateDescription = (e) => setDescription(e.target.value);
   const updatePrice = (e) => setPrice(e.target.value);
 
-  useEffect(() => {
-    dispatch(getSpotById(spotId));
-  }, [dispatch, spotId]);
+  // useEffect(() => {
+  //   dispatch(getSpotById(spotId));
+  // }, [dispatch, spotId]);
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -56,29 +58,24 @@ const EditSpotForm = ({ spot }) => {
     };
 
     //await dispatch() make action here!!!
-    const updatedSpot = await dispatch(updateSpot(payload, spotId));
-
-    history.push(`/spots/${spotId}`);
+    const newSpot = await dispatch(createSpot(payload, user.id));
+    console.log("newSpot from CreateSpotForm", newSpot);
+    history.push(`/spots/${newSpot.id}`);
   };
 
-  if (Object.keys(singleSpot).length === 0) {
-    return null;
-  }
+  // if (Object.keys(singleSpot).length === 0) {
+  //   // console.log("singleSpot null");
+  //   return null;
+  // }
 
   return (
     <div>
-      Edit Spot Form
+      Create Spot Form
       <section>
         <form onSubmit={handleSubmit}>
           <label>
             Name
-            <input
-              type="text"
-              required
-              value={name}
-              onChange={updateName}
-              placeholder={name}
-            />
+            <input type="text" required value={name} onChange={updateName} />
           </label>
           <label>
             Address
@@ -124,11 +121,11 @@ const EditSpotForm = ({ spot }) => {
               onChange={updatePrice}
             />
           </label>
-          <button type="submit">Update Spot</button>
+          <button type="submit">Create Spot</button>
         </form>
       </section>
     </div>
   );
 };
 
-export default EditSpotForm;
+export default CreateSpotForm;

@@ -27,8 +27,6 @@ router.use(express.json());
 router.get("/current", requireAuth, async (req, res) => {
   userId = req.user.id;
 
-  console.log("current user id", userId);
-
   let currentBookings = await Booking.findAll({
     where: {
       userId: userId,

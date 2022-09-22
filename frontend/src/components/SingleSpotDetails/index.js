@@ -8,6 +8,7 @@ import { getAllSpots } from "../../store/spots";
 import { getSpotById } from "../../store/spots";
 import DeleteSpot from "../DeleteSpot";
 import EditSpotForm from "../EditSpotForm";
+import { deleteSpotThunk } from "../../store/spots";
 
 const SingleSpotDetails = () => {
   const dispatch = useDispatch();
@@ -26,22 +27,22 @@ const SingleSpotDetails = () => {
   }, [dispatch, spotId]);
 
   if (Object.keys(singleSpot).length === 0) {
-    console.log("singleSpot null");
     return null;
   }
 
   let ownerLoggedIn = false;
 
-  console.log("singleSpot:", singleSpot);
-  console.log("user:", user);
-
   if (singleSpot.ownerId === user.id) {
     ownerLoggedIn = true;
   }
 
-  const handleDelete = (e) => {
-    e.preventDefault();
-    history.push(`/`);
+  const handleDelete = async (e) => {
+    console.log("hit handleDelete, spotId:", getSpotById);
+
+    dispatch(deleteSpotThunk(spotId));
+
+    console.log("handleDelete dispatch successfully run");
+    // history.push(`/`);
   };
 
   return (
@@ -52,7 +53,7 @@ const SingleSpotDetails = () => {
       <div>{singleSpot.state}</div>
       <div>{singleSpot.country}</div>
       <div>
-        <img src={singleSpot.SpotImages[0].url} alt="spotPhoto" />
+        {/* <img src={singleSpot.SpotImages[0].url} alt="spotPhoto" /> */}
       </div>
       {/* <div>{ownerLoggedIn && <DeleteSpot spot={singleSpot}></DeleteSpot>}</div> */}
       <div>

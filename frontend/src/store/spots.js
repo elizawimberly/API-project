@@ -16,20 +16,31 @@ const getAllSpotsAction = (payload) => {
 };
 
 const getSpotByIdAction = (payload) => {
+  console.log("from getSpotByIdAction payload:", payload);
   return {
     type: GET_SPOT_BY_ID,
     payload,
   };
 };
 
-const deleteSpotByIdAction = (payload) => {
+const deleteSpotByIdAction = (id) => {
+  console.log("from deleteSpotAction id:", id);
   return {
     type: DELETE_SPOT,
+    id,
+  };
+};
+
+const createSpotAction = (payload) => {
+  return {
+    type: CREATE_SPOT,
     payload,
   };
 };
 
 //THUNK ACTION CREATORS
+
+//GET ALL
 export const getAllSpots = () => async (dispatch) => {
   const res = await fetch("/api/spots");
 
@@ -39,8 +50,10 @@ export const getAllSpots = () => async (dispatch) => {
   }
 };
 
+//GET BY ID
 export const getSpotById = (spotId) => async (dispatch) => {
-  const res = await fetch(`/api/spots/${spotId}`);
+  console.log("HIT GETSPOTBYID THUNK");
+  const res = await csrfFetch(`/api/spots/${spotId}`);
 
   if (res.ok) {
     const spot = await res.json();
@@ -48,11 +61,37 @@ export const getSpotById = (spotId) => async (dispatch) => {
   }
 };
 
+//DELETE
+export const deleteSpotThunk = (id) => async (dispatch) => {
+  console.log("HIT DELETESPOT THUNK");
+  const res = await csrfFetch(`/api/spots/${id}`, {
+    method: "DELETE",
+  });
+
+  if (res.ok) {
+    dispatch(deleteSpotByIdAction(id));
+  }
+};
+
 //UPDATE
 export const updateSpot = (data, id) => async (dispatch) => {
-  console.log("body from updateSpot thunk:", JSON.stringify(data));
   const response = await csrfFetch(`/api/spots/${id}`, {
     method: "PUT",
+
+    body: JSON.stringify(data),
+  });
+
+  if (response.ok) {
+    const spot = await response.json();
+    dispatch(getSpotByIdAction(spot));
+    return spot;
+  }
+};
+
+//CREATE
+export const createSpot = (data, id) => async (dispatch) => {
+  const response = await csrfFetch(`/api/spots`, {
+    method: "POST",
     // headers: {
     //   "Content-Type": "application/json",
     // },
@@ -67,23 +106,38 @@ export const updateSpot = (data, id) => async (dispatch) => {
   }
 };
 
-//DELETE
-export const deleteSpot = (id) => async (dispatch) => {
-  const res = await csrfFetch(`/api/spots/${id}`, {
-    method: "DELETE",
-  });
-
-  if (res.ok) {
-    dispatch(deleteSpotByIdAction(id));
-  }
-};
-
 //
 //
 //
 //ESTABLISH STATE
 // const initialState = { spots: {} };
 const initialState = { allSpots: {}, singleSpot: {} };
+
+const spotsReducer = (state = initialState, action) => {
+  // console.log("action from reducer:", action);
+  const newState = { ...state };
+
+  switch (action.type) {
+    case DELETE_SPOT:
+      delete newState[action.id];
+      return newState;
+
+    case GET_ALL_SPOTS:
+      action.payload.Spots.forEach(
+        (spot) => (newState.allSpots[spot.id] = spot)
+      );
+      return newState;
+    case GET_SPOT_BY_ID:
+      newState.singleSpot = { ...action.payload };
+      newState.allSpots[action.payload.id] = { ...action.payload }; //????
+      return newState;
+
+    default:
+      return state;
+  }
+};
+
+export default spotsReducer;
 
 // const spotsReducer = (state = initialState, action) => {
 //   // let newState;
@@ -109,31 +163,3 @@ const initialState = { allSpots: {}, singleSpot: {} };
 //       return state;
 //   }
 // };
-
-const spotsReducer = (state = initialState, action) => {
-  const newState = { ...state };
-  switch (action.type) {
-    case GET_ALL_SPOTS:
-      // console.log(state);
-      // const newState = { ...state, spots: { ...state.spots } };
-
-      // console.log("newState", newState);
-      // newState = { ...state };
-      action.payload.Spots.forEach(
-        (spot) => (newState.allSpots[spot.id] = spot)
-      );
-      return newState;
-    case GET_SPOT_BY_ID:
-      newState.singleSpot = { ...action.payload };
-      return newState;
-
-    case DELETE_SPOT:
-      delete newState[action.payload];
-      return newState;
-
-    default:
-      return state;
-  }
-};
-
-export default spotsReducer;
