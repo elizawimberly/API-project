@@ -16,7 +16,6 @@ const getAllSpotsAction = (payload) => {
 };
 
 const getSpotByIdAction = (payload) => {
-  console.log("from getSpotByIdAction payload:", payload);
   return {
     type: GET_SPOT_BY_ID,
     payload,
@@ -24,7 +23,6 @@ const getSpotByIdAction = (payload) => {
 };
 
 const deleteSpotByIdAction = (id) => {
-  console.log("from deleteSpotAction id:", id);
   return {
     type: DELETE_SPOT,
     id,
@@ -52,7 +50,6 @@ export const getAllSpots = () => async (dispatch) => {
 
 //GET BY ID
 export const getSpotById = (spotId) => async (dispatch) => {
-  console.log("HIT GETSPOTBYID THUNK");
   const res = await csrfFetch(`/api/spots/${spotId}`);
 
   if (res.ok) {
@@ -63,7 +60,6 @@ export const getSpotById = (spotId) => async (dispatch) => {
 
 //DELETE
 export const deleteSpotThunk = (id) => async (dispatch) => {
-  console.log("HIT DELETESPOT THUNK");
   const res = await csrfFetch(`/api/spots/${id}`, {
     method: "DELETE",
   });
@@ -92,11 +88,8 @@ export const updateSpot = (data, id) => async (dispatch) => {
 export const createSpot = (data, id) => async (dispatch) => {
   const response = await csrfFetch(`/api/spots`, {
     method: "POST",
-    // headers: {
-    //   "Content-Type": "application/json",
-    // },
+
     body: JSON.stringify(data),
-    // body: data,
   });
 
   if (response.ok) {

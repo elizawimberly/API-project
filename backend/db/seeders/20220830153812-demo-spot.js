@@ -23,7 +23,7 @@ module.exports = {
           lat: 34.1253618,
           lng: -118.287994,
           name: "Ennis House",
-          description: '"Mayan Revival-style house built by Frank Lloyd Wright',
+          description: "Mayan Revival-style house built by Frank Lloyd Wright",
           price: 200,
         },
         {
@@ -36,7 +36,7 @@ module.exports = {
           lng: -118.297994,
           name: "Hollyhock House",
           description:
-            '"Historical landmark built by Frank Lloyd Wright located in a city park',
+            "Historical landmark built by Frank Lloyd Wright located in a city park",
           price: 120,
         },
         {
@@ -49,7 +49,7 @@ module.exports = {
           lng: -150.297994,
           name: "Samuel Novarro House",
           description:
-            '"Architectural landmark built by Lloyd Wright designed in 1928',
+            "Architectural landmark built by Lloyd Wright designed in 1928",
           price: 250,
         },
       ],

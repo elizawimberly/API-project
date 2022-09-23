@@ -9,6 +9,8 @@ import { getSpotById } from "../../store/spots";
 import DeleteSpot from "../DeleteSpot";
 import EditSpotForm from "../EditSpotForm";
 import { deleteSpotThunk } from "../../store/spots";
+import ReviewsBySpot from "../ReviewsBySpot";
+import ReviewsByUser from "../ReviewsByOwner";
 
 const SingleSpotDetails = () => {
   const dispatch = useDispatch();
@@ -70,6 +72,16 @@ const SingleSpotDetails = () => {
           {/* <EditSpotForm spot={singleSpot}></EditSpotForm> */}
           Edit Spot
         </NavLink>
+      </div>
+      <div>
+        <ReviewsBySpot />
+      </div>
+      <div>
+        {ownerLoggedIn && (
+          <div>
+            <ReviewsByUser />
+          </div>
+        )}
       </div>
     </div>
   );
