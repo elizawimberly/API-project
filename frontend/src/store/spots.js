@@ -120,6 +120,7 @@ const spotsReducer = (state = initialState, action) => {
         (spot) => (newState.allSpots[spot.id] = spot)
       );
       return newState;
+
     case GET_SPOT_BY_ID:
       newState.singleSpot = { ...action.payload };
       newState.allSpots[action.payload.id] = { ...action.payload }; //????

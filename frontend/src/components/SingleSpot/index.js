@@ -12,6 +12,12 @@ const SingleSpot = ({ spot }) => {
         <div>{spot.avgRating}</div>
         <div>{spot.description}</div>
         <div>{`$${spot.price} night`}</div>
+        <div>
+          {/* <img
+            src="https://i.ytimg.com/vi/qEQWDq4kkuM/maxresdefault.jpg"
+            alt={"testimage"}
+          /> */}
+        </div>
       </div>
     </NavLink>
   );

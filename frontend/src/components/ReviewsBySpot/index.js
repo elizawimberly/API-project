@@ -3,6 +3,7 @@ import { useState, useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { useParams, NavLink, useHistory } from "react-router-dom";
 import { getAllReviewsThunk } from "../../store/reviews";
+import { deleteReviewThunk } from "../../store/reviews";
 
 const ReviewsBySpot = () => {
   const dispatch = useDispatch();
@@ -19,15 +20,13 @@ const ReviewsBySpot = () => {
     dispatch(getAllReviewsThunk(spotId));
   }, [dispatch, spotId]);
 
-  // let reviewWriterId = spotReviews["1"].User.id;
-  // console.log("userId", userId);
-  // let writerLoggedIn = false;
+  const handleDelete = async (e) => {
+    e.preventDefault();
+    const reviewId = e.target.dataset.letter;
+    dispatch(deleteReviewThunk(reviewId));
 
-  // let ownerLoggedIn = false;
-
-  // // if (singleSpot.ownerId === user.id) {
-  // //   ownerLoggedIn = true;
-  // // }
+    // history.push(`/`);
+  };
 
   if (Object.keys(spotReviews).length === 0) {
     return null;
@@ -38,7 +37,7 @@ const ReviewsBySpot = () => {
       Here are the reviews
       <div>
         {Object.values(spotReviews).map((review) => (
-          <>
+          <div key={review.id}>
             <div>
               {review.User.firstName} {review.User.lastName}
             </div>
@@ -49,11 +48,13 @@ const ReviewsBySpot = () => {
                 <div>
                   {" "}
                   The reviewWriter is the current user
-                  <button>Delete My Review</button>
+                  <button data-letter={review.id} onClick={handleDelete}>
+                    Delete My Review
+                  </button>
                 </div>
               )}
             </div>
-          </>
+          </div>
         ))}
       </div>
     </div>

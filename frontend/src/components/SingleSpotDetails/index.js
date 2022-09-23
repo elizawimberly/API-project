@@ -39,11 +39,8 @@ const SingleSpotDetails = () => {
   }
 
   const handleDelete = async (e) => {
-    console.log("hit handleDelete, spotId:", getSpotById);
-
     dispatch(deleteSpotThunk(spotId));
 
-    console.log("handleDelete dispatch successfully run");
     // history.push(`/`);
   };
 
@@ -54,10 +51,7 @@ const SingleSpotDetails = () => {
       <div>{singleSpot.city}</div>
       <div>{singleSpot.state}</div>
       <div>{singleSpot.country}</div>
-      <div>
-        {/* <img src={singleSpot.SpotImages[0].url} alt="spotPhoto" /> */}
-      </div>
-      {/* <div>{ownerLoggedIn && <DeleteSpot spot={singleSpot}></DeleteSpot>}</div> */}
+
       <div>
         {ownerLoggedIn && (
           <div onClick={handleDelete}>
@@ -68,11 +62,16 @@ const SingleSpotDetails = () => {
 
       <div>
         <NavLink key={singleSpot.id} to={`/spots/${singleSpot.id}/edit`}>
-          {/* <div>Edit This Spot</div> */}
-          {/* <EditSpotForm spot={singleSpot}></EditSpotForm> */}
           Edit Spot
         </NavLink>
       </div>
+
+      <div>
+        <NavLink key={singleSpot.id} to={`/spots/${singleSpot.id}/reviews`}>
+          Add Your Review!
+        </NavLink>
+      </div>
+
       <div>
         <ReviewsBySpot />
       </div>
