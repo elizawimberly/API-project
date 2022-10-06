@@ -4,6 +4,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { useParams, NavLink, useHistory } from "react-router-dom";
 import { getAllReviewsThunk } from "../../store/reviews";
 import { deleteReviewThunk } from "../../store/reviews";
+import "./ReviewBySpot.css";
 
 const ReviewsBySpot = () => {
   const dispatch = useDispatch();
@@ -33,16 +34,20 @@ const ReviewsBySpot = () => {
   }
 
   return (
-    <div>
+    <div className="review-info-outer">
       Here are the reviews
       <div>
         {Object.values(spotReviews).map((review) => (
           <div key={review.id}>
-            <div>
-              {review.User.firstName} {review.User.lastName}
+            <div className="review-info">
+              {/* <div>
+                {review.User.firstName} {review.User.lastName}
+              </div> */}
+              <div>{`review.userId: ${review.userId}`}</div>
+              <div>{`review.spotId: ${review.sotId}`}</div>
+              <div>{review.review}</div>
+              <div>{review.stars}</div>
             </div>
-            <div>{review.review}</div>
-            <div>{review.stars}</div>
             <div>
               {review.userId === userId && (
                 <div>

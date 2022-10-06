@@ -11,6 +11,7 @@ import EditSpotForm from "../EditSpotForm";
 import { deleteSpotThunk } from "../../store/spots";
 import ReviewsBySpot from "../ReviewsBySpot";
 import ReviewsByUser from "../ReviewsByOwner";
+import "./SingleSpotDetails.css";
 
 const SingleSpotDetails = () => {
   const dispatch = useDispatch();
@@ -44,13 +45,24 @@ const SingleSpotDetails = () => {
     // history.push(`/`);
   };
 
+  console.log("singleSpot:", singleSpot);
+
   return (
     <div>
-      <div>{singleSpot.description}</div>
-      <div>{singleSpot.avgStarRating}</div>
-      <div>{singleSpot.city}</div>
-      <div>{singleSpot.state}</div>
-      <div>{singleSpot.country}</div>
+      <div className="spot-details">
+        <div>
+          <img
+            id="singlespotdetailimg"
+            src={singleSpot.SpotImages[0].url}
+            alt={"testimage"}
+          />
+        </div>
+        <div>{singleSpot.description}</div>
+        <div>{singleSpot.avgStarRating}</div>
+        <div>{singleSpot.city}</div>
+        <div>{singleSpot.state}</div>
+        <div>{singleSpot.country}</div>
+      </div>
 
       <div>
         {ownerLoggedIn && (

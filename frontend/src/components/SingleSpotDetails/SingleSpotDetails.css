@@ -1,0 +1,12 @@
+div {
+  padding: 1px;
+}
+
+.spot-details {
+  border: 1px solid lightgrey;
+}
+
+#singlespotdetailimg {
+  width: 600px;
+  height: 400px;
+}

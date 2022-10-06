@@ -2,6 +2,7 @@
 import React, { useState, useEffect } from "react";
 import { useDispatch } from "react-redux";
 import * as sessionActions from "../../store/session";
+import { NavLink } from "react-router-dom";
 
 function ProfileButton({ user }) {
   const dispatch = useDispatch();
@@ -12,17 +13,17 @@ function ProfileButton({ user }) {
     setShowMenu(true);
   };
 
-  useEffect(() => {
-    if (!showMenu) return;
+  // useEffect(() => {
+  //   if (!showMenu) return;
 
-    const closeMenu = () => {
-      setShowMenu(false);
-    };
+  //   const closeMenu = () => {
+  //     setShowMenu(false);
+  //   };
 
-    document.addEventListener("click", closeMenu);
+  //   document.addEventListener("click", closeMenu);
 
-    return () => document.removeEventListener("click", closeMenu);
-  }, [showMenu]);
+  //   return () => document.removeEventListener("click", closeMenu);
+  // }, [showMenu]);
 
   const logout = (e) => {
     e.preventDefault();
@@ -32,16 +33,30 @@ function ProfileButton({ user }) {
   return (
     <>
       <button onClick={openMenu}>
-        <i className="fas fa-user-circle" />
+        {/* <i className="fas fa-user-circle" />
+        <FontAwesomeIcon icon="fa-light fa-circle-user" /> */}
       </button>
       {showMenu && (
-        <ul className="profile-dropdown">
-          <li>{user.username}</li>
-          <li>{user.email}</li>
-          <li>
+        // <ul className="profile-dropdown">
+        //   <li>{user.username}</li>
+        //   <li>{user.email}</li>
+        //   <li>
+        //     <button onClick={logout}>Log Out</button>
+        //   </li>
+        // </ul>
+        <div className="profile-dropdown">
+          <div>{user.username}</div>
+          <div>{user.email}</div>
+          <div>
+            <NavLink to={`/spots/current`}>Your Spots</NavLink>
+          </div>
+          <div>
+            <NavLink to={"/reviews/current"}>Your Reviews</NavLink>
+          </div>
+          <div>
             <button onClick={logout}>Log Out</button>
-          </li>
-        </ul>
+          </div>
+        </div>
       )}
     </>
   );

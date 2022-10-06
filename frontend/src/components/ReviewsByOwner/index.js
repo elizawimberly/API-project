@@ -4,6 +4,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { useParams, NavLink, useHistory } from "react-router-dom";
 import { getUserReviewsThunk } from "../../store/reviews";
 import { deleteReviewThunk } from "../../store/reviews";
+import "./ReviewByOwner.css";
 
 const ReviewsByUser = () => {
   const dispatch = useDispatch();
@@ -30,21 +31,25 @@ const ReviewsByUser = () => {
   }
 
   return (
-    <div>
+    <div className="review-info-outer">
       Here are the User Reviews
       <div>
         {Object.values(userReviews).map((review) => (
           <div key={review.id}>
-            <div>
-              {review.User.firstName} {review.User.lastName}
-            </div>
-            <div>{review.review}</div>
-            <div>{review.stars}</div>
-            <div>
-              The reviewWriter is the current user
-              <button data-letter={review.id} onClick={handleDelete}>
-                Delete My Review
-              </button>
+            <div className="review-info">
+              {/* <div>
+                {review.User.firstName} {review.User.lastName}
+              </div> */}
+              <div>{`review.userId: ${review.userId}`}</div>
+              <div>{`review.spotId: ${review.sotId}`}</div>
+              <div>{review.review}</div>
+              <div>{review.stars}</div>
+              <div>
+                The reviewWriter is the current user
+                <button data-letter={review.id} onClick={handleDelete}>
+                  Delete My Review
+                </button>
+              </div>
             </div>
           </div>
         ))}
