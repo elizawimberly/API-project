@@ -2,7 +2,7 @@
 import React, { useState, useEffect } from "react";
 import { useDispatch } from "react-redux";
 import * as sessionActions from "../../store/session";
-import { NavLink, useHistory } from "react-router-dom";
+import { NavLink, useHistory, Link } from "react-router-dom";
 import styles from "./Navigation.module.css";
 
 function ProfileButton({ user }) {
@@ -49,17 +49,14 @@ function ProfileButton({ user }) {
         //   </li>
         // </ul>
         <div className={styles.profile_dropdown}>
-          <i className="fas fa-bars" />
-          <i className="fas fa-user-circle" />
-          <div>{user.username}</div>
-          <div>{user.email}</div>
-          <div>
+          <div className={styles.option}>Welcome, {user.username}</div>
+          <div className={styles.option}>
             <NavLink to={`/spots/current`}>Your Spots</NavLink>
           </div>
-          <div>
+          <div className={styles.option}>
             <NavLink to={"/reviews/current"}>Your Reviews</NavLink>
           </div>
-          <div>
+          <div className={styles.option}>
             <button className={styles.close_button} onClick={logout}>
               Log Out
             </button>

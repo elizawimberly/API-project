@@ -4,6 +4,7 @@ import { NavLink } from "react-router-dom";
 import { useSelector } from "react-redux";
 import ProfileButton from "./ProfileButton";
 import LoginFormModal from "../LoginFormModal";
+import SignupFormModal from "../SignupFormPage/SignUpModal";
 // import "./Navigation.css";
 import styles from "./Navigation.module.css";
 import worldLogo from "./worldLogo.png";
@@ -18,7 +19,8 @@ function Navigation({ isLoaded }) {
     sessionLinks = (
       <>
         <LoginFormModal />
-        <NavLink to="/signup">Sign Up</NavLink>
+        {/* <NavLink to="/signup">Sign Up</NavLink> */}
+        <SignupFormModal />
       </>
     );
   }
