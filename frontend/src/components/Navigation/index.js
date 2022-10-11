@@ -4,7 +4,9 @@ import { NavLink } from "react-router-dom";
 import { useSelector } from "react-redux";
 import ProfileButton from "./ProfileButton";
 import LoginFormModal from "../LoginFormModal";
-import "./Navigation.css";
+// import "./Navigation.css";
+import styles from "./Navigation.module.css";
+import worldLogo from "./worldLogo.png";
 
 function Navigation({ isLoaded }) {
   const sessionUser = useSelector((state) => state.session.user);
@@ -22,10 +24,10 @@ function Navigation({ isLoaded }) {
   }
 
   return (
-    <div id="navigation-one">
+    <div className={styles.container}>
       <div id="navigation-two">
         <NavLink exact to="/">
-          Home
+          <img src={worldLogo} />
         </NavLink>
       </div>
       <div id="navigation-three">{isLoaded && sessionLinks}</div>

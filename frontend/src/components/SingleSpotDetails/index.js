@@ -11,7 +11,8 @@ import EditSpotForm from "../EditSpotForm";
 import { deleteSpotThunk } from "../../store/spots";
 import ReviewsBySpot from "../ReviewsBySpot";
 import ReviewsByUser from "../ReviewsByOwner";
-import "./SingleSpotDetails.css";
+// import "./SingleSpotDetails.css";
+import styles from "./SingleSpotDetails.module.css";
 
 const SingleSpotDetails = () => {
   const dispatch = useDispatch();
@@ -49,10 +50,10 @@ const SingleSpotDetails = () => {
 
   return (
     <div>
-      <div className="spot-details">
+      <div className={styles.spot_details}>
         <div>
           <img
-            id="singlespotdetailimg"
+            className={styles.img}
             src={singleSpot.SpotImages[0].url}
             alt={"testimage"}
           />

@@ -2,19 +2,19 @@ import React from "react";
 import { useState, useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { NavLink } from "react-router-dom";
-import "./SingleSpot.css";
+import styles from "./SingleSpot.module.css";
 
 const SingleSpot = ({ spot }) => {
   console.log("spot", spot);
 
   return (
-    <div className="single-spot-container">
+    <div className={styles.container}>
       <NavLink key={spot.id} to={`/spots/${spot.id}`}>
         <div>
           <div>
             <div>
               <img
-                id="singlespotimg"
+                className={styles.img}
                 src={spot.previewImage}
                 alt={"testimage"}
               />

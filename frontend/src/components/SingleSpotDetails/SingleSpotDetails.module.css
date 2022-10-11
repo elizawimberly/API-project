@@ -1,0 +1,14 @@
+div {
+  padding: 1px;
+}
+
+.spot_details {
+  border: 1px solid lightgrey;
+}
+
+.img {
+  width: 500px;
+  height: 400px;
+  object-fit: cover;
+  overflow: hidden;
+}
