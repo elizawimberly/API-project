@@ -5,11 +5,14 @@ import { NavLink } from "react-router-dom";
 import styles from "./SingleSpot.module.css";
 
 const SingleSpot = ({ spot }) => {
-  console.log("spot", spot);
+  let rating = spot.avgRating;
+  if (!rating) {
+    rating = "New";
+  }
 
   return (
     <div className={styles.container}>
-      <NavLink key={spot.id} to={`/spots/${spot.id}`}>
+      <NavLink className={styles.link} key={spot.id} to={`/spots/${spot.id}`}>
         <div>
           <div>
             <div>
@@ -19,8 +22,14 @@ const SingleSpot = ({ spot }) => {
                 alt={"testimage"}
               />
             </div>
-            <div>{`${spot.city}, ${spot.state}`}</div>
-            <div>Average Rating: {spot.avgRating}</div>
+            <div className={styles.text}>
+              <div>{`${spot.city}, ${spot.state}`}</div>
+              <div>
+                <i className="fas fa-solid fa-star fa-2xs" />
+                {"  "}
+                {rating}
+              </div>
+            </div>
           </div>
           <div>{`$${spot.price} night`}</div>
         </div>

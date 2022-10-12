@@ -1,10 +1,26 @@
 .container {
   padding: 15px;
+  border-radius: 20px;
+}
+
+.container:hover {
+  background-color: rgb(245, 239, 239);
 }
 
 .img {
   height: 240px;
   width: 300px;
   object-fit: cover;
+  border-radius: 20px;
   /* overflow: hidden; */
+}
+
+.link {
+  text-decoration: none;
+}
+
+.text {
+  display: flex;
+  justify-content: space-between;
+  font-weight: 600;
 }

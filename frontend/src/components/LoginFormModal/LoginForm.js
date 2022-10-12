@@ -20,6 +20,16 @@ function LoginForm() {
     );
   };
 
+  const handleDemo = (e) => {
+    e.preventDefault();
+    return dispatch(
+      sessionActions.login({
+        credential: "Demo-lition",
+        password: "password",
+      })
+    );
+  };
+
   return (
     <form onSubmit={handleSubmit}>
       <ul>
@@ -46,6 +56,7 @@ function LoginForm() {
         />
       </label>
       <button type="submit">Log In</button>
+      <button onClick={handleDemo}>Demo User</button>
     </form>
   );
 }

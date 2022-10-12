@@ -1,7 +1,7 @@
 import React from "react";
 import { useState, useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import "./AllSpots.css";
+import styles from "./AllSpots.module.css";
 import { getAllSpots } from "../../store/spots";
 import SingleSpot from "../SingleSpot";
 import { NavLink } from "react-router-dom";
@@ -21,7 +21,7 @@ const AllSpots = () => {
 
   return (
     <>
-      <div>
+      <div className={styles.container}>
         {Object.values(allSpots).map((spot) => (
           <div key={spot.id}>
             {/* {spot.address} */}

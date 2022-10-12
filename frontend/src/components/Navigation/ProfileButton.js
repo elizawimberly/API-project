@@ -49,12 +49,16 @@ function ProfileButton({ user }) {
         //   </li>
         // </ul>
         <div className={styles.profile_dropdown}>
-          <div className={styles.option}>Welcome, {user.username}</div>
+          <div>Welcome, {user.username}</div>
           <div className={styles.option}>
-            <NavLink to={`/spots/current`}>Your Spots</NavLink>
+            <NavLink className={styles.link} to={`/spots/current`}>
+              Your Spots
+            </NavLink>
           </div>
           <div className={styles.option}>
-            <NavLink to={"/reviews/current"}>Your Reviews</NavLink>
+            <NavLink className={styles.link} to={"/reviews/current"}>
+              Your Reviews
+            </NavLink>
           </div>
           <div className={styles.option}>
             <button className={styles.close_button} onClick={logout}>
