@@ -24,3 +24,7 @@
   justify-content: space-between;
   font-weight: 600;
 }
+
+.price {
+  font-weight: 200;
+}

@@ -31,7 +31,7 @@ const SingleSpot = ({ spot }) => {
               </div>
             </div>
           </div>
-          <div>{`$${spot.price} night`}</div>
+          <div className={styles.price}>{`$${spot.price} night`}</div>
         </div>
       </NavLink>
     </div>

@@ -5,6 +5,7 @@
   margin-right: 30px;
   height: 80px;
   align-items: center;
+  border-bottom: 1px solid #e0d8d8;
 }
 
 .profile_container {
