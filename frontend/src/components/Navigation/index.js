@@ -47,6 +47,13 @@ function Navigation({ isLoaded }) {
           <img src={worldLogo} alt="world-logo" />
         </NavLink>
       </div>
+      {sessionUser && (
+        <div className={styles.container_two} id={styles.new_spot}>
+          <NavLink className={styles.link} to={`/spots/create`}>
+            Become A Host!
+          </NavLink>
+        </div>
+      )}
       <div className={styles.button_container}>{isLoaded && sessionLinks}</div>
     </div>
     // <ul>

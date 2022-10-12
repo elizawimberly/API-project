@@ -1,5 +1,5 @@
 // frontend/src/components/LoginFormModal/LoginForm.js
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import * as sessionActions from "../../store/session";
 import { useDispatch } from "react-redux";
 
@@ -8,10 +8,24 @@ function LoginForm() {
   const [credential, setCredential] = useState("");
   const [password, setPassword] = useState("");
   const [errors, setErrors] = useState([]);
+  const [submitStatus, setSubmitStatus] = useState(false);
+
+  useEffect(() => {
+    const errors = [];
+    if (credential.length < 1)
+      errors.push("Please enter your username or email");
+    if (password.length < 5)
+      errors.push("Please enter a password with at least 5 characters");
+    setErrors(errors);
+  }, [credential, password]);
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    setErrors([]);
+    // setErrors([]);
+    setSubmitStatus(true);
+    if (errors.length) {
+      return;
+    }
     return dispatch(sessionActions.login({ credential, password })).catch(
       async (res) => {
         const data = await res.json();
@@ -20,23 +34,15 @@ function LoginForm() {
     );
   };
 
-  const handleDemo = (e) => {
-    e.preventDefault();
-    return dispatch(
-      sessionActions.login({
-        credential: "Demo-lition",
-        password: "password",
-      })
-    );
-  };
-
   return (
     <form onSubmit={handleSubmit}>
-      <ul>
-        {errors.map((error, idx) => (
-          <li key={idx}>{error}</li>
-        ))}
-      </ul>
+      {submitStatus && (
+        <ul>
+          {errors.map((error, idx) => (
+            <li key={idx}>{error}</li>
+          ))}
+        </ul>
+      )}
       <label>
         Username or Email
         <input
@@ -56,7 +62,6 @@ function LoginForm() {
         />
       </label>
       <button type="submit">Log In</button>
-      <button onClick={handleDemo}>Demo User</button>
     </form>
   );
 }

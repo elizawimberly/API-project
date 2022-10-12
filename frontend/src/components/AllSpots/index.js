@@ -29,7 +29,6 @@ const AllSpots = () => {
           </div>
         ))}
       </div>
-      <NavLink to={`/spots/create`}>Create A New Spot</NavLink>
     </>
   );
 };

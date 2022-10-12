@@ -79,3 +79,7 @@
 .container_two:hover {
   background-color: rgb(245, 239, 239);
 }
+
+#new_spot {
+  margin-left: 0px;
+}
