@@ -1,8 +1,9 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { Redirect } from "react-router-dom";
 import * as sessionActions from "../../store/session";
-import "./SignupForm.css";
+
+import styles from "./SignupForm.module.css";
 
 function SignupFormPage() {
   const dispatch = useDispatch();
@@ -14,11 +15,34 @@ function SignupFormPage() {
   const [password, setPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
   const [errors, setErrors] = useState([]);
+  const [submitStatus, setSubmitStatus] = useState(false);
 
-  if (sessionUser) return <Redirect to="/" />;
+  // if (sessionUser) return <Redirect to="/" />;
+
+  useEffect(() => {
+    const errors = [];
+    if (email.length < 1) errors.push("Please enter your email");
+    if (!email.includes("@")) errors.push("Please enter a valid email address");
+    if (username.length < 1) errors.push("Please enter a username");
+    if (username.length < 5)
+      errors.push("Username must be at least 5 characters long");
+    if (firstName.length < 1) errors.push("Please enter your first name");
+    if (lastName.length < 1) errors.push("Please enter your last name");
+    if (password.length < 1) errors.push("Please enter a password");
+    if (password.length < 5)
+      errors.push("Please enter a password with at least 5 characters");
+    if (confirmPassword.length < 1) errors.push("Please confirm your password");
+    setErrors(errors);
+  }, [email, username, firstName, lastName, password, confirmPassword]);
 
   const handleSubmit = (e) => {
     e.preventDefault();
+    setSubmitStatus(true);
+
+    if (errors.length) {
+      return;
+    }
+
     if (password === confirmPassword) {
       setErrors([]);
       return dispatch(
@@ -39,16 +63,28 @@ function SignupFormPage() {
     ]);
   };
 
+  if (sessionUser) return <Redirect to="/" />;
+
   return (
     <form onSubmit={handleSubmit}>
-      <ul>
+      <div className={styles.welcome_container}>
+        <h3>Join the World BnB Community!</h3>
+      </div>
+      {submitStatus && (
+        <ul>
+          {errors.map((error, idx) => (
+            <li key={idx}>{error}</li>
+          ))}
+        </ul>
+      )}
+      {/* <ul>
         {errors.map((error, idx) => (
           <li key={idx}>{error}</li>
         ))}
-      </ul>
+      </ul> */}
       <label>
-        Email
         <input
+          placeholder="Email"
           type="text"
           value={email}
           onChange={(e) => setEmail(e.target.value)}
@@ -56,8 +92,8 @@ function SignupFormPage() {
         />
       </label>
       <label>
-        Firstname
         <input
+          placeholder="First Name"
           type="text"
           value={firstName}
           onChange={(e) => setFirstName(e.target.value)}
@@ -65,8 +101,8 @@ function SignupFormPage() {
         />
       </label>
       <label>
-        Lastname
         <input
+          placeholder="Last Name"
           type="text"
           value={lastName}
           onChange={(e) => setLastName(e.target.value)}
@@ -74,8 +110,8 @@ function SignupFormPage() {
         />
       </label>
       <label>
-        Username
         <input
+          placeholder="Username"
           type="text"
           value={username}
           onChange={(e) => setUsername(e.target.value)}
@@ -83,8 +119,8 @@ function SignupFormPage() {
         />
       </label>
       <label>
-        Password
         <input
+          placeholder="Password"
           type="password"
           value={password}
           onChange={(e) => setPassword(e.target.value)}
@@ -92,8 +128,8 @@ function SignupFormPage() {
         />
       </label>
       <label>
-        Confirm Password
         <input
+          placeholder="Confirm Password"
           type="password"
           value={confirmPassword}
           onChange={(e) => setConfirmPassword(e.target.value)}

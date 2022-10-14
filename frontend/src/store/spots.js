@@ -133,25 +133,64 @@ const spotsReducer = (state = initialState, action) => {
 
 export default spotsReducer;
 
+//newState = { ...state, spots: { ...state.spots, [action.spotId]: spot } }
+
+// const initialState = { allSpots: {}, singleSpot: {} };
+
 // const spotsReducer = (state = initialState, action) => {
-//   // let newState;
+//   // console.log("action from reducer:", action);
+//   const newState = { ...state };
+
 //   switch (action.type) {
+//     case DELETE_SPOT:
+//       delete newState[action.id];
+//       return newState;
+
 //     case GET_ALL_SPOTS:
-//       // console.log(state);
-//       // const newState = { ...state, spots: { ...state.spots } };
-//       const newState = { ...state };
-//       // console.log("newState", newState);
-//       // newState = { ...state };
 //       action.payload.Spots.forEach(
 //         (spot) => (newState.allSpots[spot.id] = spot)
 //       );
 //       return newState;
-//     case GET_SPOT_BY_ID:
-//       const newStateObj = { ...state };
-//       newStateObj.singleSpot = { ...action.payload };
-//       return newStateObj;
 
-//     // case DELETE_SPOT:
+//     case GET_SPOT_BY_ID:
+//       newState.singleSpot = { ...action.payload };
+//       newState.allSpots[action.payload.id] = { ...action.payload }; //????
+//       return newState;
+
+//     default:
+//       return state;
+//   }
+// };
+
+//REFACTORED STATE:
+
+// const initialState = { allSpots: {}, singleSpot: {} };
+
+// const spotsReducer = (state = initialState, action) => {
+//   // console.log("action from reducer:", action);
+//   const newState = { ...state };
+
+//   switch (action.type) {
+//     case DELETE_SPOT:
+//       delete newState[action.id];
+//       return newState;
+
+//     case GET_ALL_SPOTS:
+//       action.payload.Spots.forEach(
+//         (spot) => (newState.allSpots[spot.id] = spot)
+//       );
+//       return newState;
+
+//     case GET_SPOT_BY_ID:
+//       let newStateCopy = { ...state };
+//       console.log("HERE MY NEWSTATECOPY:", newStateCopy);
+
+//       newStateCopy = {
+//         ...state,
+//         allSpots: { ...state.allSpots, [action.payload.id]: action.payload },
+//       };
+//       newStateCopy.singleSpot = { ...action.payload };
+//       return newStateCopy;
 
 //     default:
 //       return state;

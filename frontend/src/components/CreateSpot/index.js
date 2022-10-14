@@ -60,7 +60,9 @@ const CreateSpotForm = ({ spot }) => {
     //await dispatch() make action here!!!
     const newSpot = await dispatch(createSpot(payload, user.id));
     console.log("newSpot from CreateSpotForm", newSpot);
-    history.push(`/spots/${newSpot.id}`);
+    if (newSpot) {
+      history.push(`/spots/${newSpot.id}`);
+    }
   };
 
   // if (Object.keys(singleSpot).length === 0) {

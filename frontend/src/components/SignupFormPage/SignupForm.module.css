@@ -1,7 +1,7 @@
-.form {
+form {
   display: flex;
   flex-direction: column;
-  height: 400px;
+  height: 600px;
   width: 400px;
   align-items: center;
   justify-content: center;
@@ -11,7 +11,7 @@
   border-radius: 8px;
 }
 
-.form input {
+form input {
   background-color: white;
   height: 50px;
   width: 400px;
@@ -23,11 +23,11 @@
   text-indent: 10px;
 }
 
-.form input:hover {
+form input:hover {
   background-color: rgb(245, 239, 239);
 }
 
-.form button {
+form button {
   width: 300px;
   background-color: #ff5a5f;
   color: white;

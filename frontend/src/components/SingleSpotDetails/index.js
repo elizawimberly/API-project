@@ -46,54 +46,87 @@ const SingleSpotDetails = () => {
     // history.push(`/`);
   };
 
+  // console.log("singleSpot.ownerId", singleSpot.ownerId);
   console.log("singleSpot:", singleSpot);
 
+  let rating = singleSpot.avgStarRating;
+  if (!rating) {
+    rating = "New";
+  }
+
+  if (!singleSpot) {
+    return null;
+  }
+
   return (
-    <div>
+    <div className={styles.container}>
       <div className={styles.spot_details}>
-        <div>
+        <div className={styles.name}>{singleSpot.name}</div>
+        <div className={styles.star}>
+          <i className="fas fa-solid fa-star fa-2xs" />
+          <div className={styles.rating}>{rating}</div>
+          <div
+            className={styles.location}
+          >{`${singleSpot.city},  ${singleSpot.state}`}</div>
+        </div>
+        {singleSpot.SpotImages[0] && (
+          <div>
+            <img
+              className={styles.img}
+              src={singleSpot.SpotImages[0].url}
+              alt={"testimage"}
+            />
+          </div>
+        )}
+        {/* <div>
           <img
             className={styles.img}
             src={singleSpot.SpotImages[0].url}
             alt={"testimage"}
           />
+        </div> */}
+        <div className={styles.details}>
+          <div
+            className={styles.first_name}
+          >{`Hosted by ${user.firstName}`}</div>
+          <div className={styles.description}>{singleSpot.description}</div>
         </div>
-        <div>{singleSpot.description}</div>
-        <div>{singleSpot.avgStarRating}</div>
-        <div>{singleSpot.city}</div>
-        <div>{singleSpot.state}</div>
-        <div>{singleSpot.country}</div>
       </div>
 
-      <div>
-        {ownerLoggedIn && (
-          <div onClick={handleDelete}>
-            <DeleteSpot></DeleteSpot>
-          </div>
-        )}
-      </div>
+      <div className={styles.lower_container}>
+        <div>
+          {ownerLoggedIn && (
+            // <div onClick={handleDelete}>
+            //   <DeleteSpot></DeleteSpot>
+            // </div>
+            <div>
+              <button onClick={handleDelete}>Delete This Spot</button>
+            </div>
+          )}
+        </div>
 
-      <div>
-        <NavLink key={singleSpot.id} to={`/spots/${singleSpot.id}/edit`}>
-          Edit Spot
-        </NavLink>
-      </div>
+        <div>
+          <NavLink key={singleSpot.id} to={`/spots/${singleSpot.id}/edit`}>
+            Edit Spot
+          </NavLink>
+        </div>
 
-      <div>
-        <NavLink key={singleSpot.id} to={`/spots/${singleSpot.id}/reviews`}>
-          Add Your Review!
-        </NavLink>
-      </div>
+        <div>
+          <NavLink key={singleSpot.id} to={`/spots/${singleSpot.id}/reviews`}>
+            Add Your Review!
+          </NavLink>
+        </div>
 
-      <div>
-        <ReviewsBySpot />
-      </div>
-      <div>
-        {ownerLoggedIn && (
-          <div>
-            <ReviewsByUser />
-          </div>
-        )}
+        <div>
+          <ReviewsBySpot />
+        </div>
+        <div>
+          {ownerLoggedIn && (
+            <div>
+              <ReviewsByUser />
+            </div>
+          )}
+        </div>
       </div>
     </div>
   );

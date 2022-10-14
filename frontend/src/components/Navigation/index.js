@@ -26,7 +26,16 @@ function Navigation({ isLoaded }) {
 
   let sessionLinks;
   if (sessionUser) {
-    sessionLinks = <ProfileButton user={sessionUser} />;
+    sessionLinks = (
+      <div className={styles.session}>
+        <div className={styles.container_two} id={styles.new_spot}>
+          <NavLink className={styles.link} to={`/spots/create`}>
+            Become A Host!
+          </NavLink>
+        </div>
+        <ProfileButton user={sessionUser} />
+      </div>
+    );
   } else {
     sessionLinks = (
       <div className={styles.button_container}>
@@ -47,13 +56,13 @@ function Navigation({ isLoaded }) {
           <img src={worldLogo} alt="world-logo" />
         </NavLink>
       </div>
-      {sessionUser && (
+      {/* {sessionUser && (
         <div className={styles.container_two} id={styles.new_spot}>
           <NavLink className={styles.link} to={`/spots/create`}>
             Become A Host!
           </NavLink>
         </div>
-      )}
+      )} */}
       <div className={styles.button_container}>{isLoaded && sessionLinks}</div>
     </div>
     // <ul>
