@@ -6,6 +6,7 @@ import { useParams } from "react-router-dom";
 import { updateSpot } from "../../store/spots";
 import { useHistory } from "react-router-dom";
 import { createSpot } from "../../store/spots";
+import { createImageThunk } from "../../store/spots";
 
 const CreateSpotForm = ({ spot }) => {
   const dispatch = useDispatch();
@@ -29,6 +30,7 @@ const CreateSpotForm = ({ spot }) => {
   const [lng, setLng] = useState(-150.5);
   const [description, setDescription] = useState("");
   const [price, setPrice] = useState("");
+  const [url, setUrl] = useState("");
 
   const updateName = (e) => setName(e.target.value);
   const updateAddress = (e) => setAddress(e.target.value);
@@ -37,6 +39,7 @@ const CreateSpotForm = ({ spot }) => {
   const updateCountry = (e) => setCountry(e.target.value);
   const updateDescription = (e) => setDescription(e.target.value);
   const updatePrice = (e) => setPrice(e.target.value);
+  const updateUrl = (e) => setUrl(e.target.value);
 
   // useEffect(() => {
   //   dispatch(getSpotById(spotId));
@@ -57,18 +60,21 @@ const CreateSpotForm = ({ spot }) => {
       price,
     };
 
+    const newImage = {
+      url,
+      preview: true,
+    };
+
     //await dispatch() make action here!!!
     const newSpot = await dispatch(createSpot(payload, user.id));
     console.log("newSpot from CreateSpotForm", newSpot);
     if (newSpot) {
+      //call dispatch here that will add image to a spot
+      await dispatch(createImageThunk(newSpot.id, newImage));
+
       history.push(`/spots/${newSpot.id}`);
     }
   };
-
-  // if (Object.keys(singleSpot).length === 0) {
-  //   // console.log("singleSpot null");
-  //   return null;
-  // }
 
   return (
     <div>
@@ -122,6 +128,10 @@ const CreateSpotForm = ({ spot }) => {
               value={price}
               onChange={updatePrice}
             />
+          </label>
+          <label>
+            Image Url
+            <input type="text" required value={url} onChange={updateUrl} />
           </label>
           <button type="submit">Create Spot</button>
         </form>

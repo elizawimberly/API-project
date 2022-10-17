@@ -6,6 +6,7 @@ const GET_SPOT_BY_ID = "spots/id/read";
 const CREATE_SPOT = "spots/create";
 const UPDATE_SPOT = "spots/update";
 const DELETE_SPOT = "spots/delete";
+const CREATE_SPOT_IMAGE = "spots/image/create";
 
 //ACTIONS
 const getAllSpotsAction = (payload) => {
@@ -33,6 +34,14 @@ const createSpotAction = (payload) => {
   return {
     type: CREATE_SPOT,
     payload,
+  };
+};
+
+const createSpotImageAction = (spotId, imageObj) => {
+  return {
+    type: CREATE_SPOT_IMAGE,
+    spotId,
+    imageObj,
   };
 };
 
@@ -97,6 +106,22 @@ export const createSpot = (data, id) => async (dispatch) => {
     dispatch(getSpotByIdAction(spot));
     return spot;
   }
+
+  //make a thunk that send a request to create an image for the specific spot - the
+  //need spotId, url, true (for previewimage)
+  //the reducer will need to handle adding the spotimage url to the single spot in the reducer - make sure it works for all spots and single spot
+};
+
+export const createImageThunk = (spotId, reqObj) => async (dispatch) => {
+  const response = await csrfFetch(`/api/spots/${spotId}/images`, {
+    method: "POST",
+    body: JSON.stringify(reqObj),
+  });
+
+  if (response.ok) {
+    let imageObj = await response.json();
+    dispatch(createSpotImageAction(spotId, imageObj));
+  }
 };
 
 //
@@ -126,6 +151,13 @@ const spotsReducer = (state = initialState, action) => {
       newState.allSpots[action.payload.id] = { ...action.payload }; //????
       return newState;
 
+    case CREATE_SPOT_IMAGE:
+      newState.singleSpot = {
+        ...state.singleSpot,
+        SpotImages: [action.imageObj.url],
+      };
+      return newState;
+
     default:
       return state;
   }
@@ -135,6 +167,7 @@ export default spotsReducer;
 
 //newState = { ...state, spots: { ...state.spots, [action.spotId]: spot } }
 
+//ORIGINAL WORKING REDUCER
 // const initialState = { allSpots: {}, singleSpot: {} };
 
 // const spotsReducer = (state = initialState, action) => {
@@ -162,7 +195,7 @@ export default spotsReducer;
 //   }
 // };
 
-//REFACTORED STATE:
+//REFACTORED REDUCER:
 
 // const initialState = { allSpots: {}, singleSpot: {} };
 

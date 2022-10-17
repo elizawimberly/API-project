@@ -69,7 +69,8 @@ const SingleSpotDetails = () => {
             className={styles.location}
           >{`${singleSpot.city},  ${singleSpot.state}`}</div>
         </div>
-        {singleSpot.SpotImages[0] && (
+        {/* you can remove the following conditionals once you have adding url functionality to create spot form */}
+        {singleSpot.SpotImages && singleSpot.SpotImages[0] && (
           <div>
             <img
               className={styles.img}
