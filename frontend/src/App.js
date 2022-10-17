@@ -12,6 +12,7 @@ import CreateSpotForm from "./components/CreateSpot";
 import ReviewsBySpot from "./components/ReviewsBySpot";
 import ReviewsByUser from "./components/ReviewsByOwner";
 import PostReviewForm from "./components/PostReview";
+import UserSpots from "./components/UserSpots";
 
 function App() {
   const dispatch = useDispatch();
@@ -30,6 +31,9 @@ function App() {
           </Route>
           <Route exact path="/">
             <AllSpots />
+          </Route>
+          <Route exact path="/spots/current">
+            <UserSpots />
           </Route>
           <Route exact path="/reviews/current">
             <ReviewsByUser />

@@ -46,8 +46,15 @@ const SingleSpotDetails = () => {
     // history.push(`/`);
   };
 
-  // console.log("singleSpot.ownerId", singleSpot.ownerId);
+  console.log("singleSpot.ownerId", singleSpot.ownerId);
+  console.log("user", user);
   console.log("singleSpot:", singleSpot);
+
+  if (user.id === singleSpot.ownerId) {
+    ownerLoggedIn = true;
+  }
+
+  console.log("ownerLoggedIn", ownerLoggedIn);
 
   let rating = singleSpot.avgStarRating;
   if (!rating) {
@@ -100,27 +107,30 @@ const SingleSpotDetails = () => {
             // <div onClick={handleDelete}>
             //   <DeleteSpot></DeleteSpot>
             // </div>
-            <div>
-              <button onClick={handleDelete}>Delete This Spot</button>
+            <div className={styles.button_container}>
+              <div>
+                <button className={styles.button} onClick={handleDelete}>
+                  Delete your place
+                </button>
+              </div>
+              <div>
+                <button className={styles.button}>
+                  <NavLink
+                    key={singleSpot.id}
+                    to={`/spots/${singleSpot.id}/edit`}
+                    className={styles.link}
+                  >
+                    Edit your place
+                  </NavLink>
+                </button>
+              </div>
             </div>
           )}
         </div>
 
-        <div>
-          <NavLink key={singleSpot.id} to={`/spots/${singleSpot.id}/edit`}>
-            Edit Spot
-          </NavLink>
-        </div>
-
-        <div>
-          <NavLink key={singleSpot.id} to={`/spots/${singleSpot.id}/reviews`}>
-            Add Your Review!
-          </NavLink>
-        </div>
-
-        <div>
+        {/* <div>
           <ReviewsBySpot />
-        </div>
+        </div> */}
         <div>
           {ownerLoggedIn && (
             <div>

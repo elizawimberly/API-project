@@ -55,11 +55,11 @@ function ProfileButton({ user }) {
               Your Spots
             </NavLink>
           </div>
-          <div className={styles.option}>
+          {/* <div className={styles.option}>
             <NavLink className={styles.link} to={"/reviews/current"}>
               Your Reviews
             </NavLink>
-          </div>
+          </div> */}
           <div className={styles.option}>
             <button className={styles.close_button} onClick={logout}>
               Log Out

@@ -7,6 +7,7 @@ const CREATE_SPOT = "spots/create";
 const UPDATE_SPOT = "spots/update";
 const DELETE_SPOT = "spots/delete";
 const CREATE_SPOT_IMAGE = "spots/image/create";
+const GET_USER_SPOTS = "spots/read/user";
 
 //ACTIONS
 const getAllSpotsAction = (payload) => {
@@ -106,10 +107,6 @@ export const createSpot = (data, id) => async (dispatch) => {
     dispatch(getSpotByIdAction(spot));
     return spot;
   }
-
-  //make a thunk that send a request to create an image for the specific spot - the
-  //need spotId, url, true (for previewimage)
-  //the reducer will need to handle adding the spotimage url to the single spot in the reducer - make sure it works for all spots and single spot
 };
 
 export const createImageThunk = (spotId, reqObj) => async (dispatch) => {
@@ -121,6 +118,15 @@ export const createImageThunk = (spotId, reqObj) => async (dispatch) => {
   if (response.ok) {
     let imageObj = await response.json();
     dispatch(createSpotImageAction(spotId, imageObj));
+  }
+};
+
+export const getUserSpotsThunk = () => async (dispatch) => {
+  const response = await csrfFetch(`/api/spots/current`);
+
+  if (response.ok) {
+    const spots = await response.json();
+    dispatch(getAllSpotsAction(spots));
   }
 };
 

@@ -64,3 +64,28 @@ div {
   border-bottom: 1px solid lightgrey;
   margin-bottom: 20px;
 }
+
+.link {
+  text-decoration: none;
+  color: #484848;
+}
+
+.button {
+  background: transparent;
+  height: 40px;
+  width: 160px;
+  display: flex;
+  justify-content: space-around;
+  align-items: center;
+  border-radius: 20px;
+  border: 1px solid rgb(170, 163, 163);
+}
+
+.button:hover {
+  background-color: rgb(241, 239, 239);
+}
+
+.button_container {
+  display: flex;
+  justify-content: space-evenly;
+}
