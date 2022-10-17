@@ -3,3 +3,10 @@
   flex-wrap: wrap;
   justify-content: space-evenly;
 }
+
+.title {
+  display: flex;
+  justify-content: center;
+  font-size: 30px;
+  padding-top: 10px;
+}

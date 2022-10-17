@@ -7,6 +7,7 @@ import { updateSpot } from "../../store/spots";
 import { useHistory } from "react-router-dom";
 import { createSpot } from "../../store/spots";
 import { createImageThunk } from "../../store/spots";
+import styles from "../AllSpots/AllSpots.module.css";
 
 const CreateSpotForm = ({ spot }) => {
   const dispatch = useDispatch();
@@ -19,9 +20,6 @@ const CreateSpotForm = ({ spot }) => {
   // }, [dispatch, spotId]);
 
   const [name, setName] = useState("");
-  // console.log("checking name singleSpot.name:", singleSpot?.name);
-  // console.log("checking name name:", name);
-
   const [address, setAddress] = useState("");
   const [city, setCity] = useState("");
   const [state, setState] = useState("");
@@ -31,6 +29,8 @@ const CreateSpotForm = ({ spot }) => {
   const [description, setDescription] = useState("");
   const [price, setPrice] = useState("");
   const [url, setUrl] = useState("");
+  const [errors, setErrors] = useState([]);
+  const [submitStatus, setSubmitStatus] = useState(false);
 
   const updateName = (e) => setName(e.target.value);
   const updateAddress = (e) => setAddress(e.target.value);
@@ -41,12 +41,39 @@ const CreateSpotForm = ({ spot }) => {
   const updatePrice = (e) => setPrice(e.target.value);
   const updateUrl = (e) => setUrl(e.target.value);
 
-  // useEffect(() => {
-  //   dispatch(getSpotById(spotId));
-  // }, [dispatch, spotId]);
+  function checkForNumbers(str) {
+    let hasNum = false;
+    for (let el of str) {
+      if (!isNaN(el)) {
+        hasNum = true;
+      }
+    }
+    return hasNum;
+  }
+
+  useEffect(() => {
+    const errors = [];
+    if (name.length < 1) errors.push("Please enter the name of your place");
+    if (!checkForNumbers(address)) errors.push("Address must contain numbers");
+    if (city.length < 2) errors.push("Please provide a valid city name");
+    if (state.length < 2) errors.push("Please provide a valid state name");
+    if (description.length < 5)
+      errors.push(
+        "Please provide a description of your place, at least a few words long"
+      );
+    if (!checkForNumbers(price)) errors.push("Price must contain numbers");
+    if (!url.includes("https://"))
+      errors.push("Please enter a valid https url address");
+    setErrors(errors);
+  }, [name, address, city, state, description, price, url]);
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+    setSubmitStatus(true);
+
+    if (errors.length) {
+      return;
+    }
 
     const payload = {
       address,
@@ -67,7 +94,6 @@ const CreateSpotForm = ({ spot }) => {
 
     //await dispatch() make action here!!!
     const newSpot = await dispatch(createSpot(payload, user.id));
-    console.log("newSpot from CreateSpotForm", newSpot);
     if (newSpot) {
       //call dispatch here that will add image to a spot
       await dispatch(createImageThunk(newSpot.id, newImage));
@@ -78,16 +104,28 @@ const CreateSpotForm = ({ spot }) => {
 
   return (
     <div>
-      Create Spot Form
+      <div className={styles.title}>Tell us about your place!</div>
       <section>
+        {submitStatus && (
+          <ul>
+            {errors.map((error, idx) => (
+              <li key={idx}>{error}</li>
+            ))}
+          </ul>
+        )}
         <form onSubmit={handleSubmit}>
           <label>
-            Name
-            <input type="text" required value={name} onChange={updateName} />
+            <input
+              placeholder="Name of your new place"
+              type="text"
+              required
+              value={name}
+              onChange={updateName}
+            />
           </label>
           <label>
-            Address
             <input
+              placeholder="Address"
               type="text"
               required
               value={address}
@@ -95,16 +133,26 @@ const CreateSpotForm = ({ spot }) => {
             />
           </label>
           <label>
-            City
-            <input type="text" required value={city} onChange={updateCity} />
-          </label>
-          <label>
-            State
-            <input type="text" required value={state} onChange={updateState} />
-          </label>
-          <label>
-            Country
             <input
+              placeholder="City"
+              type="text"
+              required
+              value={city}
+              onChange={updateCity}
+            />
+          </label>
+          <label>
+            <input
+              placeholder="State"
+              type="text"
+              required
+              value={state}
+              onChange={updateState}
+            />
+          </label>
+          <label>
+            <input
+              placeholder="Country"
               type="text"
               required
               value={country}
@@ -112,8 +160,8 @@ const CreateSpotForm = ({ spot }) => {
             />
           </label>
           <label>
-            Description
             <input
+              placeholder="Describe your place"
               type="text"
               required
               value={description}
@@ -121,8 +169,8 @@ const CreateSpotForm = ({ spot }) => {
             />
           </label>
           <label>
-            Price
             <input
+              placeholder="Price per night"
               type="number"
               required
               value={price}
@@ -130,10 +178,15 @@ const CreateSpotForm = ({ spot }) => {
             />
           </label>
           <label>
-            Image Url
-            <input type="text" required value={url} onChange={updateUrl} />
+            <input
+              placeholder="Add an image of your place"
+              type="text"
+              required
+              value={url}
+              onChange={updateUrl}
+            />
           </label>
-          <button type="submit">Create Spot</button>
+          <button type="submit">Start Hosting!</button>
         </form>
       </section>
     </div>
