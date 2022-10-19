@@ -22,13 +22,6 @@ module.exports = {
         },
         {
           spotId: 1,
-          userId: 3,
-          review:
-            "We loved this location so much we came back for a second time!",
-          stars: 4,
-        },
-        {
-          spotId: 1,
           userId: 2,
           review:
             "We had a great time. The check-in was easy and the house was spotless",

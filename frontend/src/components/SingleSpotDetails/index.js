@@ -70,6 +70,16 @@ const SingleSpotDetails = () => {
     return null;
   }
 
+  let hasAddedReview = false;
+  Object.values(reviews).forEach((review) => {
+    if (review.userId === user.id) {
+      hasAddedReview = true;
+    }
+  });
+
+  console.log("reviews", Object.values(reviews));
+  console.log("hasAddedReview", hasAddedReview);
+
   return (
     <div className={styles.container}>
       <div className={styles.spot_details}>
@@ -121,7 +131,7 @@ const SingleSpotDetails = () => {
 
       <div className={styles.lower_container}>
         <div>
-          {!ownerLoggedIn && validUser && (
+          {!ownerLoggedIn && validUser && !hasAddedReview && (
             <div className={styles.button_container}>
               <div>
                 <button className={styles.button}>

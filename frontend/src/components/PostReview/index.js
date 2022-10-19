@@ -3,6 +3,7 @@ import { useState, useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { useParams, useHistory } from "react-router-dom";
 import { createReviewThunk } from "../../store/reviews";
+import styles from "../AllSpots/AllSpots.module.css";
 
 const PostReviewForm = () => {
   const dispatch = useDispatch();
@@ -31,7 +32,9 @@ const PostReviewForm = () => {
 
   return (
     <div>
-      Add Your Review
+      <div className={styles.title} id={styles.heading}>
+        Add your review!
+      </div>
       <section>
         <form onSubmit={handleSubmit}>
           {/* <label>

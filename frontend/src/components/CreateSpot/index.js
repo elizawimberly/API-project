@@ -53,7 +53,7 @@ const CreateSpotForm = ({ spot }) => {
 
   useEffect(() => {
     const errors = [];
-    if (name.length < 1) errors.push("Please enter the name of your place");
+    if (name.length < 4) errors.push("Please enter a valid name");
     if (!checkForNumbers(address)) errors.push("Address must contain numbers");
     if (city.length < 2) errors.push("Please provide a valid city name");
     if (state.length < 2) errors.push("Please provide a valid state name");
@@ -109,7 +109,7 @@ const CreateSpotForm = ({ spot }) => {
       </div>
       <section>
         {submitStatus && (
-          <ul>
+          <ul className={styles.ul}>
             {errors.map((error, idx) => (
               <li key={idx}>{error}</li>
             ))}

@@ -14,8 +14,6 @@ const EditSpotForm = ({ spot }) => {
   const spots = useSelector((state) => state.spots);
   const { singleSpot } = spots;
 
-  console.log("singleSpot", singleSpot);
-
   const { spotId } = useParams();
 
   // const [name, setName] = useState(singleSpot?.name);
@@ -65,16 +63,16 @@ const EditSpotForm = ({ spot }) => {
 
   useEffect(() => {
     const errors = [];
-    if (name?.length < 1) errors.push("Please enter the name of your place");
-    // if (!checkForNumbers(address)) errors.push("Address must contain numbers");
+    if (name?.length < 4) errors.push("Please enter a valid name");
+    if (address?.length < 5) errors.push("Please provide a valid address");
     if (city?.length < 2) errors.push("Please provide a valid city name");
     if (state?.length < 2) errors.push("Please provide a valid state name");
     if (description?.length < 5)
       errors.push(
         "Please provide a description of your place, at least a few words long"
       );
-    // if (!checkForNumbers(price)) errors.push("Price must contain numbers");
-    // setErrors(errors);
+    if (isNaN(price)) errors.push("Price must contain numbers");
+    setErrors(errors);
   }, [name, address, city, state, description, price]);
 
   //TEST CODE
@@ -83,14 +81,14 @@ const EditSpotForm = ({ spot }) => {
   // const checkErrors = () => {
   //   errors = [];
   //   if (name.length < 1) errors.push("Please enter the name of your place");
-  //   if (!checkForNumbers(address)) errors.push("Address must contain numbers");
+  //   if (address.length < 5) errors.push("Please provide a valid address");
   //   if (city.length < 2) errors.push("Please provide a valid city name");
   //   if (state.length < 2) errors.push("Please provide a valid state name");
   //   if (description.length < 5)
   //     errors.push(
   //       "Please provide a description of your place, at least a few words long"
   //     );
-  //   if (!checkForNumbers(price)) errors.push("Price must contain numbers");
+  //   if (isNaN(price)) errors.push("Price must contain numbers");
   //   // setErrors(errors);
   // };
 
@@ -115,10 +113,8 @@ const EditSpotForm = ({ spot }) => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    setSubmitStatus(true);
 
-    // checkErrors();
-    // console.log("errors", errors);
+    setSubmitStatus(true);
 
     if (errors.length) {
       return;
@@ -142,6 +138,13 @@ const EditSpotForm = ({ spot }) => {
     history.push(`/spots/${spotId}`);
   };
 
+  // useEffect(() => {
+  // if (Object.keys(singleSpot).length === 0) {
+  //   console.log("HIT EMPTY CONDITION");
+  //   return null;
+  // }, [])
+
+  //ORIGINAL
   if (Object.keys(singleSpot).length === 0) {
     console.log("HIT EMPTY CONDITION");
     return null;
@@ -153,6 +156,13 @@ const EditSpotForm = ({ spot }) => {
         Update your place!
       </div>
       <section>
+        {submitStatus && (
+          <ul className={styles.ul}>
+            {errors.map((error, idx) => (
+              <li key={idx}>{error}</li>
+            ))}
+          </ul>
+        )}
         <form onSubmit={handleSubmit}>
           <label>
             <input
