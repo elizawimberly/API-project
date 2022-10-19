@@ -2,12 +2,8 @@ div {
   padding: 1px;
 }
 
-.spot_details {
-  /* border: 1px solid lightgrey; */
-}
-
 .img {
-  width: 600px;
+  width: 700px;
   height: 500px;
   object-fit: cover;
   overflow: hidden;
@@ -42,7 +38,7 @@ div {
 .lower_container {
   display: flex;
   flex-direction: column;
-  width: 600px;
+  width: 680px;
 }
 
 .details {
@@ -88,4 +84,54 @@ div {
 .button_container {
   display: flex;
   justify-content: space-evenly;
+  border-bottom: 1px solid lightgrey;
+  padding-bottom: 20px;
+  margin-bottom: 20px;
+}
+
+.outer {
+  display: flex;
+  justify-content: space-between;
+}
+
+.price {
+  width: 40%;
+  height: 300px;
+  box-sizing: border-box;
+  border: 1px solid rgb(221, 221, 221);
+  border-radius: 12px;
+  padding: 24px;
+  box-shadow: rgba(0, 0, 0, 0.12) 0px 6px 16px;
+  margin-bottom: 20px;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-evenly;
+}
+
+.details_list {
+  width: 50%;
+  padding-left: 18px;
+  display: flex;
+  flex-direction: column;
+  padding-bottom: 30px;
+  justify-content: space-around;
+}
+
+.bold {
+  font-weight: 900;
+  font-size: 18px;
+}
+
+/* * {
+  font-weight: 300;
+} */
+
+.text {
+  display: flex;
+  justify-content: space-between;
+}
+
+#bar {
+  border-top: 1px solid lightgrey;
+  padding-top: 20px;
 }

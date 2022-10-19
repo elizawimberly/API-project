@@ -46,7 +46,16 @@ const deleteReviewAction = (reviewId) => {
 //
 //GET ALL REVIEWS FOR SPOT
 export const getAllReviewsThunk = (spotId) => async (dispatch) => {
-  const res = await csrfFetch(`/api/spots/${spotId}/reviews`);
+  // const res = await csrfFetch(`/api/spots/${spotId}/reviews`);
+
+  const res = await fetch(`/api/spots/${spotId}/reviews`);
+
+  // if (res.ok) {
+  //   const payload = await res.json();
+  //   dispatch(getSpotReviewsAction(payload));
+  // } else {
+  //   dispatch(getSpotReviewsAction({ Reviews: [] }));
+  // }
 
   if (res.ok) {
     const payload = await res.json();
@@ -105,10 +114,11 @@ const reviewsReducer = (state = initialState, action) => {
   switch (action.type) {
     case GET_ALL_REVIEWS:
       newState.reviewsBySpot = {};
+      console.log("from reducer newState", newState);
       action.payload.Reviews.forEach(
         (review) => (newState.reviewsBySpot[review.id] = review)
       );
-      // newState.spot = newState.newSpot;
+
       return newState;
 
     case GET_USER_REVIEWS:
@@ -116,7 +126,7 @@ const reviewsReducer = (state = initialState, action) => {
       action.payload.Reviews.forEach(
         (review) => (newState.reviewsByUser[review.id] = review)
       );
-      // newState.spot = newState.newSpot;
+
       return newState;
 
     case CREATE_REVIEW:

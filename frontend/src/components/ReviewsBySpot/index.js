@@ -4,16 +4,23 @@ import { useDispatch, useSelector } from "react-redux";
 import { useParams, NavLink, useHistory } from "react-router-dom";
 import { getAllReviewsThunk } from "../../store/reviews";
 import { deleteReviewThunk } from "../../store/reviews";
-import "./ReviewBySpot.css";
+import { getSpotById } from "../../store/spots";
+import styles from "./ReviewBySpot.module.css";
 
-const ReviewsBySpot = () => {
+const ReviewsBySpot = ({ reviews }) => {
   const dispatch = useDispatch();
 
-  const allReviews = useSelector((state) => state.reviews);
+  const spotReviews = useSelector((state) => state.reviews.reviewsBySpot);
   const user = useSelector((state) => state.session.user);
-  const userId = user.id;
 
-  const spotReviews = allReviews.reviewsBySpot;
+  let userId;
+  if (!user) {
+    userId = 0;
+  } else {
+    userId = user.id;
+  }
+
+  // const spotReviews = allReviews.reviewsBySpot;
 
   const { spotId } = useParams();
 
@@ -25,6 +32,8 @@ const ReviewsBySpot = () => {
     e.preventDefault();
     const reviewId = e.target.dataset.letter;
     dispatch(deleteReviewThunk(reviewId));
+    dispatch(getAllReviewsThunk(spotId));
+    dispatch(getSpotById(spotId));
 
     // history.push(`/`);
   };
@@ -34,25 +43,24 @@ const ReviewsBySpot = () => {
   }
 
   return (
-    <div className="review-info-outer">
-      Here are the reviews
-      <div>
+    <div className={styles.outer}>
+      <div className={styles.container}>
         {Object.values(spotReviews).map((review) => (
           <div key={review.id}>
-            <div className="review-info">
+            <div className={styles.info} key={review.id}>
               {/* <div>
                 {review.User.firstName} {review.User.lastName}
               </div> */}
+              <div>{`current userId: ${userId}`}</div>
               <div>{`review.userId: ${review.userId}`}</div>
-              <div>{`review.spotId: ${review.sotId}`}</div>
+              <div>{`review.spotId: ${review.spotId}`}</div>
               <div>{review.review}</div>
-              <div>{review.stars}</div>
-            </div>
-            <div>
+              <div className={styles.star}>
+                <i className="fas fa-solid fa-star fa-2xs" />
+                <div className={styles.rating}>{review.stars}</div>
+              </div>
               {review.userId === userId && (
                 <div>
-                  {" "}
-                  The reviewWriter is the current user
                   <button data-letter={review.id} onClick={handleDelete}>
                     Delete My Review
                   </button>

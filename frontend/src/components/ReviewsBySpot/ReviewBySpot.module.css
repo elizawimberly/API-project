@@ -1,0 +1,20 @@
+.info {
+  border: 1px solid lightgrey;
+  height: 100%;
+  width: 100%;
+}
+
+.outer {
+  border: 1px solid grey;
+  display: flex;
+}
+
+.star {
+  display: flex;
+}
+
+.container {
+  display: flex;
+  flex-direction: column;
+  flex-wrap: wrap;
+}

@@ -214,7 +214,9 @@ router.get("/current", requireAuth, async (req, res) => {
 //
 //GET DETAILS OF A SPOT BY ID
 //postman  {{url}}/spots/{{spotId}}
-router.get("/:spotId", requireAuth, async (req, res) => {
+//old cold with require auth
+//router.get("/:spotId", requireAuth, async (req, res) => {
+router.get("/:spotId", async (req, res) => {
   let spotId = req.params.spotId;
 
   const spot = await Spot.findOne({
@@ -701,8 +703,22 @@ router.delete("/:spotId", requireAuth, async (req, res) => {
 //
 //GET REVIEWS OF SPOT BY ID
 //  {{url}}/spots/{{spotId}}/reviews
-router.get("/:spotId/reviews", requireAuth, async (req, res) => {
+//Old code with require off:
+//router.get("/:spotId/reviews", requireAuth, async (req, res) => {
+router.get("/:spotId/reviews", async (req, res) => {
   let spotId = req.params.spotId;
+
+  //added
+  let spot = await Spot.findByPk(spotId);
+
+  if (!spot) {
+    return res.status(404).json({
+      message: "Spot couldn't be found",
+      statusCode: 404,
+    });
+  }
+
+  //end of new code
 
   let reviews = await Review.findAll({
     where: {
@@ -720,12 +736,12 @@ router.get("/:spotId/reviews", requireAuth, async (req, res) => {
     ],
   });
 
-  if (!reviews.length) {
-    return res.status(404).json({
-      message: "Spot couldn't be found",
-      statusCode: 404,
-    });
-  }
+  // if (!reviews.length) {
+  //   return res.status(404).json({
+  //     message: "Spot couldn't be found",
+  //     statusCode: 404,
+  //   });
+  // }
 
   res.json({ Reviews: reviews });
 });

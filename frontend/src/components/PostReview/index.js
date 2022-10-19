@@ -24,12 +24,7 @@ const PostReviewForm = () => {
       stars,
     };
 
-    console.log("singleSpot.id", singleSpot.id);
-    console.log("payload", payload);
-
     const newReview = await dispatch(createReviewThunk(payload, singleSpot.id));
-
-    console.log("newReview:", newReview);
 
     history.push(`/spots/${singleSpot.id}`);
   };

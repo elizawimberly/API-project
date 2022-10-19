@@ -11,8 +11,9 @@ import EditSpotForm from "../EditSpotForm";
 import { deleteSpotThunk } from "../../store/spots";
 import ReviewsBySpot from "../ReviewsBySpot";
 import ReviewsByUser from "../ReviewsByOwner";
-// import "./SingleSpotDetails.css";
+import SpotPrice from "./SpotPrice";
 import styles from "./SingleSpotDetails.module.css";
+import { getAllReviewsThunk } from "../../store/reviews";
 
 const SingleSpotDetails = () => {
   const dispatch = useDispatch();
@@ -21,13 +22,18 @@ const SingleSpotDetails = () => {
   // const allSpots = useSelector((state) => state.spots.allSpots);
 
   const spots = useSelector((state) => state.spots);
-  const user = useSelector((state) => state.session.user);
+  let user = useSelector((state) => state.session.user);
+
+  //testing
+  const reviews = useSelector((state) => state.reviews.reviewsBySpot);
+
   const { singleSpot } = spots;
 
   const { spotId } = useParams();
 
   useEffect(() => {
     dispatch(getSpotById(spotId));
+    dispatch(getAllReviewsThunk(spotId));
   }, [dispatch, spotId]);
 
   if (Object.keys(singleSpot).length === 0) {
@@ -35,10 +41,18 @@ const SingleSpotDetails = () => {
   }
 
   let ownerLoggedIn = false;
+  let validUser = true;
 
-  if (singleSpot.ownerId === user.id) {
-    ownerLoggedIn = true;
+  //new
+  if (!user) {
+    user = { id: 0 };
+    validUser = false;
   }
+  //old
+
+  // if (singleSpot.ownerId === user.id) {
+  //   ownerLoggedIn = true;
+  // }
 
   const handleDelete = async (e) => {
     dispatch(deleteSpotThunk(spotId));
@@ -46,15 +60,9 @@ const SingleSpotDetails = () => {
     // history.push(`/`);
   };
 
-  console.log("singleSpot.ownerId", singleSpot.ownerId);
-  console.log("user", user);
-  console.log("singleSpot:", singleSpot);
-
   if (user.id === singleSpot.ownerId) {
     ownerLoggedIn = true;
   }
-
-  console.log("ownerLoggedIn", ownerLoggedIn);
 
   let rating = singleSpot.avgStarRating;
   if (!rating) {
@@ -76,7 +84,26 @@ const SingleSpotDetails = () => {
             className={styles.location}
           >{`${singleSpot.city},  ${singleSpot.state}`}</div>
         </div>
-        {/* you can remove the following conditionals once you have adding url functionality to create spot form */}
+        {ownerLoggedIn && (
+          <div className={styles.button_container}>
+            <div>
+              <button className={styles.button} onClick={handleDelete}>
+                Delete your place
+              </button>
+            </div>
+            <div>
+              <button className={styles.button}>
+                <NavLink
+                  key={singleSpot.id}
+                  to={`/spots/${singleSpot.id}/edit`}
+                  className={styles.link}
+                >
+                  Edit your place
+                </NavLink>
+              </button>
+            </div>
+          </div>
+        )}
         {singleSpot.SpotImages && singleSpot.SpotImages[0] && (
           <div>
             <img
@@ -86,13 +113,6 @@ const SingleSpotDetails = () => {
             />
           </div>
         )}
-        {/* <div>
-          <img
-            className={styles.img}
-            src={singleSpot.SpotImages[0].url}
-            alt={"testimage"}
-          />
-        </div> */}
         <div className={styles.details}>
           <div
             className={styles.first_name}
@@ -103,40 +123,25 @@ const SingleSpotDetails = () => {
 
       <div className={styles.lower_container}>
         <div>
-          {ownerLoggedIn && (
-            // <div onClick={handleDelete}>
-            //   <DeleteSpot></DeleteSpot>
-            // </div>
+          {!ownerLoggedIn && validUser && (
             <div className={styles.button_container}>
-              <div>
-                <button className={styles.button} onClick={handleDelete}>
-                  Delete your place
-                </button>
-              </div>
               <div>
                 <button className={styles.button}>
                   <NavLink
-                    key={singleSpot.id}
-                    to={`/spots/${singleSpot.id}/edit`}
+                    to={`/spots/${singleSpot.id}/reviews`}
                     className={styles.link}
                   >
-                    Edit your place
+                    Add your review
                   </NavLink>
                 </button>
               </div>
             </div>
           )}
         </div>
+        <SpotPrice spot={singleSpot} />
 
-        {/* <div>
-          <ReviewsBySpot />
-        </div> */}
         <div>
-          {ownerLoggedIn && (
-            <div>
-              <ReviewsByUser />
-            </div>
-          )}
+          <ReviewsBySpot reviews={reviews} />
         </div>
       </div>
     </div>
