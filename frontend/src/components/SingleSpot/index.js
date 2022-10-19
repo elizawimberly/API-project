@@ -8,6 +8,8 @@ const SingleSpot = ({ spot }) => {
   let rating = spot.avgRating;
   if (!rating) {
     rating = "New";
+  } else {
+    rating = Number.parseFloat(rating).toFixed(1);
   }
 
   return (

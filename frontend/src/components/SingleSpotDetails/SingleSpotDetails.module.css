@@ -69,12 +69,13 @@ div {
 .button {
   background: transparent;
   height: 40px;
-  width: 160px;
+  width: 200px;
   display: flex;
   justify-content: space-around;
   align-items: center;
   border-radius: 20px;
   border: 1px solid rgb(170, 163, 163);
+  font-size: 16px;
 }
 
 .button:hover {
@@ -92,6 +93,7 @@ div {
 .outer {
   display: flex;
   justify-content: space-between;
+  border-bottom: 1px solid lightgrey;
 }
 
 .price {

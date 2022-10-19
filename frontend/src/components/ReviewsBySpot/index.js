@@ -7,7 +7,7 @@ import { deleteReviewThunk } from "../../store/reviews";
 import { getSpotById } from "../../store/spots";
 import styles from "./ReviewBySpot.module.css";
 
-const ReviewsBySpot = ({ reviews }) => {
+const ReviewsBySpot = ({ reviews, numReviews, rating }) => {
   const dispatch = useDispatch();
 
   const spotReviews = useSelector((state) => state.reviews.reviewsBySpot);
@@ -19,8 +19,6 @@ const ReviewsBySpot = ({ reviews }) => {
   } else {
     userId = user.id;
   }
-
-  // const spotReviews = allReviews.reviewsBySpot;
 
   const { spotId } = useParams();
 
@@ -43,32 +41,41 @@ const ReviewsBySpot = ({ reviews }) => {
   }
 
   return (
-    <div className={styles.outer}>
-      <div className={styles.container}>
-        {Object.values(spotReviews).map((review) => (
-          <div key={review.id}>
-            <div className={styles.info} key={review.id}>
-              {/* <div>
-                {review.User.firstName} {review.User.lastName}
-              </div> */}
-              <div>{`current userId: ${userId}`}</div>
-              <div>{`review.userId: ${review.userId}`}</div>
-              <div>{`review.spotId: ${review.spotId}`}</div>
-              <div>{review.review}</div>
-              <div className={styles.star}>
-                <i className="fas fa-solid fa-star fa-2xs" />
-                <div className={styles.rating}>{review.stars}</div>
-              </div>
-              {review.userId === userId && (
-                <div>
-                  <button data-letter={review.id} onClick={handleDelete}>
-                    Delete My Review
-                  </button>
+    <div>
+      <div className={styles.number}>
+        <i className="fas fa-solid fa-star fa-2xs" />
+        <div className={styles.rating}>{rating}</div>
+        <div className={styles.rating}>{`(${numReviews}  Reviews)`}</div>
+      </div>
+      <div className={styles.outer}>
+        {/* <div className={styles.number}>{`${numReviews}  Reviews`}</div> */}
+
+        <div className={styles.container}>
+          {Object.values(spotReviews).map((review) => (
+            <div key={review.id}>
+              <div className={styles.info} key={review.id}>
+                {/* <div
+                  className={styles.bold}
+                >{`Review by ${review.User.firstName}`}</div> */}
+
+                <div className={styles.light}>{review.review}</div>
+                <div className={styles.star}>
+                  <i className="fas fa-solid fa-star fa-2xs" />
+                  <div className={styles.rating}>
+                    {Number.parseFloat(review.stars).toFixed(1)}
+                  </div>
                 </div>
-              )}
+                {review.userId === userId && (
+                  <div>
+                    <button data-letter={review.id} onClick={handleDelete}>
+                      Delete My Review
+                    </button>
+                  </div>
+                )}
+              </div>
             </div>
-          </div>
-        ))}
+          ))}
+        </div>
       </div>
     </div>
   );

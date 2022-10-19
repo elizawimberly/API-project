@@ -24,8 +24,8 @@ const SingleSpotDetails = () => {
   const spots = useSelector((state) => state.spots);
   let user = useSelector((state) => state.session.user);
 
-  //testing
   const reviews = useSelector((state) => state.reviews.reviewsBySpot);
+  const numReviews = Object.values(reviews).length;
 
   const { singleSpot } = spots;
 
@@ -40,6 +40,12 @@ const SingleSpotDetails = () => {
     return null;
   }
 
+  const handleDelete = async (e) => {
+    dispatch(deleteSpotThunk(spotId));
+
+    // history.push(`/`);
+  };
+
   let ownerLoggedIn = false;
   let validUser = true;
 
@@ -48,17 +54,6 @@ const SingleSpotDetails = () => {
     user = { id: 0 };
     validUser = false;
   }
-  //old
-
-  // if (singleSpot.ownerId === user.id) {
-  //   ownerLoggedIn = true;
-  // }
-
-  const handleDelete = async (e) => {
-    dispatch(deleteSpotThunk(spotId));
-
-    // history.push(`/`);
-  };
 
   if (user.id === singleSpot.ownerId) {
     ownerLoggedIn = true;
@@ -67,6 +62,8 @@ const SingleSpotDetails = () => {
   let rating = singleSpot.avgStarRating;
   if (!rating) {
     rating = "New";
+  } else {
+    rating = Number.parseFloat(rating).toFixed(1);
   }
 
   if (!singleSpot) {
@@ -80,6 +77,7 @@ const SingleSpotDetails = () => {
         <div className={styles.star}>
           <i className="fas fa-solid fa-star fa-2xs" />
           <div className={styles.rating}>{rating}</div>
+          <div className={styles.location}>{`${numReviews}  Reviews`}</div>
           <div
             className={styles.location}
           >{`${singleSpot.city},  ${singleSpot.state}`}</div>
@@ -141,7 +139,11 @@ const SingleSpotDetails = () => {
         <SpotPrice spot={singleSpot} />
 
         <div>
-          <ReviewsBySpot reviews={reviews} />
+          <ReviewsBySpot
+            reviews={reviews}
+            numReviews={numReviews}
+            rating={rating}
+          />
         </div>
       </div>
     </div>
