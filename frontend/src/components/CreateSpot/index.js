@@ -104,7 +104,9 @@ const CreateSpotForm = ({ spot }) => {
 
   return (
     <div>
-      <div className={styles.title}>Tell us about your place!</div>
+      <div className={styles.title} id={styles.heading}>
+        Tell us about your place!
+      </div>
       <section>
         {submitStatus && (
           <ul>

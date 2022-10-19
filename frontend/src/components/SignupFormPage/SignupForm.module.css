@@ -31,6 +31,8 @@ form button {
   width: 300px;
   background-color: #ff5a5f;
   color: white;
+  margin-top: 14px;
+  font-size: 16px;
 }
 
 .welcome_container {
