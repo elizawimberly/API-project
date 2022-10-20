@@ -144,8 +144,13 @@ const spotsReducer = (state = initialState, action) => {
 
   switch (action.type) {
     case DELETE_SPOT:
-      delete newState[action.id];
-      return newState;
+      let stateCopy = {
+        allSpots: { ...newState.allSpots },
+        singleSpot: { ...newState.singleSpot },
+      };
+      delete stateCopy.allSpots[action.id];
+      // delete stateCopy.singleSpot;
+      return stateCopy;
 
     case GET_ALL_SPOTS:
       action.payload.Spots.forEach(
@@ -171,6 +176,11 @@ const spotsReducer = (state = initialState, action) => {
 };
 
 export default spotsReducer;
+
+//old delete:
+// case DELETE_SPOT:
+//   delete newState[action.id];
+//   return newState;
 
 //newState = { ...state, spots: { ...state.spots, [action.spotId]: spot } }
 

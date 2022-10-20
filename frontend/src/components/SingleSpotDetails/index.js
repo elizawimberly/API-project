@@ -41,9 +41,18 @@ const SingleSpotDetails = () => {
   }
 
   const handleDelete = async (e) => {
-    dispatch(deleteSpotThunk(spotId));
+    // let response = await dispatch(deleteSpotThunk(spotId));
+    // await dispatch(getAllSpots());
+    // alert("You have successfully deleted your spot");
 
-    // history.push(`/`);
+    // console.log(response);
+    // if (response) {
+    //   history.push(`/`);
+    // }
+    dispatch(deleteSpotThunk(spotId));
+    alert("You have successfully deleted your spot");
+
+    history.push("/");
   };
 
   let ownerLoggedIn = false;
