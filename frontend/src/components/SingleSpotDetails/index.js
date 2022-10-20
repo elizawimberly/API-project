@@ -77,9 +77,6 @@ const SingleSpotDetails = () => {
     }
   });
 
-  console.log("reviews", Object.values(reviews));
-  console.log("hasAddedReview", hasAddedReview);
-
   return (
     <div className={styles.container}>
       <div className={styles.spot_details}>
@@ -122,9 +119,9 @@ const SingleSpotDetails = () => {
           </div>
         )}
         <div className={styles.details}>
-          <div
+          {/* <div
             className={styles.first_name}
-          >{`Hosted by ${user.firstName}`}</div>
+          >{`Hosted by ${singleSpot.Owner.firstName}`}</div> */}
           <div className={styles.description}>{singleSpot.description}</div>
         </div>
       </div>
