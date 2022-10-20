@@ -1,5 +1,6 @@
 .container {
-  padding: 15px;
+  padding-bottom: 15px;
+  padding-top: 15px;
   border-radius: 20px;
 }
 
@@ -12,7 +13,6 @@
   width: 300px;
   object-fit: cover;
   border-radius: 20px;
-  /* overflow: hidden; */
 }
 
 .link {

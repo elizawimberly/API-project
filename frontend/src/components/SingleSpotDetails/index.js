@@ -123,7 +123,7 @@ const SingleSpotDetails = () => {
             <img
               className={styles.img}
               src={singleSpot.SpotImages[0].url}
-              alt={"testimage"}
+              alt={"preview_image"}
             />
           </div>
         )}
@@ -131,7 +131,9 @@ const SingleSpotDetails = () => {
           {/* <div
             className={styles.first_name}
           >{`Hosted by ${singleSpot.Owner.firstName}`}</div> */}
-          <div className={styles.description}>{singleSpot.description}</div>
+          <div style={{ paddingBottom: 20 }} className={styles.description}>
+            {singleSpot.description}
+          </div>
         </div>
       </div>
 
@@ -148,6 +150,15 @@ const SingleSpotDetails = () => {
                     Add your review
                   </NavLink>
                 </button>
+              </div>
+            </div>
+          )}
+        </div>
+        <div>
+          {!ownerLoggedIn && validUser && hasAddedReview && (
+            <div className={styles.button_container}>
+              <div style={{ paddingBottom: 10 }}>
+                You have already reviewed this spot!
               </div>
             </div>
           )}
