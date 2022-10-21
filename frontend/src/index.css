@@ -28,3 +28,10 @@ button:hover {
 input {
   background-color: white;
 }
+
+li {
+  list-style: none;
+  color: red;
+  font-weight: 300;
+  font-size: 14px;
+}
