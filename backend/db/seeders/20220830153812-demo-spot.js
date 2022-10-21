@@ -88,6 +88,45 @@ module.exports = {
           description: "Come relax at this beautiful home",
           price: 120,
         },
+        {
+          ownerId: 2,
+          address: "9782 Beachwood Dr",
+          city: "Mexico City",
+          state: "Mexico",
+          country: "Mexico",
+          lat: 36.10013,
+          lng: -150.297994,
+          name: "In the heart of lovely Condesa",
+          description:
+            "Nice apartment in Condesa with a beautiful view and near a park, restaurants, and bars.  Ideal for enjoying La Condesa's vibrant life.",
+          price: 100,
+        },
+        {
+          ownerId: 2,
+          address: "9782 Paris Dr",
+          city: "Paris",
+          state: "France",
+          country: "France",
+          lat: 36.10013,
+          lng: -150.297994,
+          name: "Rooftops of Paris",
+          description:
+            "Most Beautiful View over Paris from last floor in Champs Elysées with Private Garden /Terrace amazing view over all Paris monuments",
+          price: 300,
+        },
+        {
+          ownerId: 3,
+          address: "3000 Beachwood Dr",
+          city: "Los Angeles",
+          state: "California",
+          country: "USA",
+          lat: 36.10013,
+          lng: -150.297994,
+          name: "Spanish-style Hollywood Hills Home",
+          description:
+            "This Hollywood Hills spanish-style home is nestled in the historic Beachwood Canyon. Its spacious, multi-storied backyard serves breathtaking views of the Hollywood Hills and the city in the horizon.",
+          price: 240,
+        },
       ],
       {}
     );

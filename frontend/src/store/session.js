@@ -32,7 +32,6 @@ const removeUser = () => {
 //
 //THUNK ACTION CREATORS
 export const login = (user) => async (dispatch) => {
-  // console.log("in login thunk");
   const { credential, password } = user;
   const response = await csrfFetch("/api/session", {
     method: "POST",

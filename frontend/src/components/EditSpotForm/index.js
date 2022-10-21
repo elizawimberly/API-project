@@ -50,17 +50,6 @@ const EditSpotForm = ({ spot }) => {
   const updateDescription = (e) => setDescription(e.target.value);
   const updatePrice = (e) => setPrice(e.target.value);
 
-  // function checkForNumbers(str) {
-  //   console.log("str", str);
-  //   let hasNum = false;
-  //   for (let el of str) {
-  //     if (!isNaN(el)) {
-  //       hasNum = true;
-  //     }
-  //   }
-  //   return hasNum;
-  // }
-
   useEffect(() => {
     const errors = [];
     if (name?.length < 4) errors.push("Please enter a valid name");
@@ -75,27 +64,8 @@ const EditSpotForm = ({ spot }) => {
     setErrors(errors);
   }, [name, address, city, state, description, price]);
 
-  //TEST CODE
-  // let errors = [];
-
-  // const checkErrors = () => {
-  //   errors = [];
-  //   if (name.length < 1) errors.push("Please enter the name of your place");
-  //   if (address.length < 5) errors.push("Please provide a valid address");
-  //   if (city.length < 2) errors.push("Please provide a valid city name");
-  //   if (state.length < 2) errors.push("Please provide a valid state name");
-  //   if (description.length < 5)
-  //     errors.push(
-  //       "Please provide a description of your place, at least a few words long"
-  //     );
-  //   if (isNaN(price)) errors.push("Price must contain numbers");
-  //   // setErrors(errors);
-  // };
-
   useEffect(() => {
-    console.log("HIT USE EFFECT SPOT EXISTS CONDITION");
     if (Object.keys(singleSpot).length !== 0) {
-      console.log("singleSpot", singleSpot);
       if (name === null) setName(singleSpot.name);
       if (address === null) setAddress(singleSpot.address);
       if (city === null) setCity(singleSpot.city);
@@ -107,7 +77,6 @@ const EditSpotForm = ({ spot }) => {
   }, [singleSpot, name, address, city, state, country, description, price]);
 
   useEffect(() => {
-    console.log("USE EFFECT RAN");
     dispatch(getSpotById(spotId));
   }, [dispatch, spotId]);
 
@@ -132,21 +101,13 @@ const EditSpotForm = ({ spot }) => {
       price,
     };
 
-    //await dispatch() make action here!!!
     const updatedSpot = await dispatch(updateSpot(payload, spotId));
 
     history.push(`/spots/${spotId}`);
   };
 
-  // useEffect(() => {
-  // if (Object.keys(singleSpot).length === 0) {
-  //   console.log("HIT EMPTY CONDITION");
-  //   return null;
-  // }, [])
-
   //ORIGINAL
   if (Object.keys(singleSpot).length === 0) {
-    console.log("HIT EMPTY CONDITION");
     return null;
   }
 

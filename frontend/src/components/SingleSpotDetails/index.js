@@ -41,14 +41,6 @@ const SingleSpotDetails = () => {
   }
 
   const handleDelete = async (e) => {
-    // let response = await dispatch(deleteSpotThunk(spotId));
-    // await dispatch(getAllSpots());
-    // alert("You have successfully deleted your spot");
-
-    // console.log(response);
-    // if (response) {
-    //   history.push(`/`);
-    // }
     dispatch(deleteSpotThunk(spotId));
     alert("You have successfully deleted your spot");
 
@@ -102,7 +94,7 @@ const SingleSpotDetails = () => {
           <div className={styles.button_container}>
             <div>
               <button className={styles.button} onClick={handleDelete}>
-                Delete your place
+                Delete your spot
               </button>
             </div>
             <div>
@@ -112,7 +104,7 @@ const SingleSpotDetails = () => {
                   to={`/spots/${singleSpot.id}/edit`}
                   className={styles.link}
                 >
-                  Edit your place
+                  Edit your spot
                 </NavLink>
               </button>
             </div>
@@ -158,7 +150,7 @@ const SingleSpotDetails = () => {
           {!ownerLoggedIn && validUser && hasAddedReview && (
             <div className={styles.button_container}>
               <div style={{ paddingBottom: 10 }}>
-                You have already reviewed this spot!
+                You have already reviewed this spot
               </div>
             </div>
           )}

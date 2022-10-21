@@ -3,6 +3,7 @@ import { useState, useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { useParams, useHistory } from "react-router-dom";
 import { createReviewThunk } from "../../store/reviews";
+import * as sessionActions from "../../store/session";
 import styles from "../AllSpots/AllSpots.module.css";
 
 const PostReviewForm = () => {
@@ -42,6 +43,8 @@ const PostReviewForm = () => {
     };
 
     const newReview = await dispatch(createReviewThunk(payload, singleSpot.id));
+    //new dispatch added here
+    await dispatch(sessionActions.restoreUser());
 
     history.push(`/spots/${singleSpot.id}`);
   };

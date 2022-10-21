@@ -46,6 +46,13 @@ const createSpotImageAction = (spotId, imageObj) => {
   };
 };
 
+const getUserSpotsAction = (payload) => {
+  return {
+    type: GET_USER_SPOTS,
+    payload,
+  };
+};
+
 //THUNK ACTION CREATORS
 
 //GET ALL
@@ -127,7 +134,7 @@ export const getUserSpotsThunk = () => async (dispatch) => {
 
   if (response.ok) {
     const spots = await response.json();
-    dispatch(getAllSpotsAction(spots));
+    dispatch(getUserSpotsAction(spots));
   }
 };
 
@@ -139,7 +146,6 @@ export const getUserSpotsThunk = () => async (dispatch) => {
 const initialState = { allSpots: {}, singleSpot: {} };
 
 const spotsReducer = (state = initialState, action) => {
-  // console.log("action from reducer:", action);
   const newState = { ...state };
 
   switch (action.type) {
@@ -170,6 +176,17 @@ const spotsReducer = (state = initialState, action) => {
       };
       return newState;
 
+    //new
+    case GET_USER_SPOTS:
+      let userState = {
+        allSpots: {},
+        singleSpot: { ...newState.singleSpot },
+      };
+      action.payload.Spots.forEach(
+        (spot) => (userState.allSpots[spot.id] = spot)
+      );
+      return userState;
+
     default:
       return state;
   }
@@ -177,72 +194,4 @@ const spotsReducer = (state = initialState, action) => {
 
 export default spotsReducer;
 
-//old delete:
-// case DELETE_SPOT:
-//   delete newState[action.id];
-//   return newState;
-
-//newState = { ...state, spots: { ...state.spots, [action.spotId]: spot } }
-
-//ORIGINAL WORKING REDUCER
-// const initialState = { allSpots: {}, singleSpot: {} };
-
-// const spotsReducer = (state = initialState, action) => {
-//   // console.log("action from reducer:", action);
-//   const newState = { ...state };
-
-//   switch (action.type) {
-//     case DELETE_SPOT:
-//       delete newState[action.id];
-//       return newState;
-
-//     case GET_ALL_SPOTS:
-//       action.payload.Spots.forEach(
-//         (spot) => (newState.allSpots[spot.id] = spot)
-//       );
-//       return newState;
-
-//     case GET_SPOT_BY_ID:
-//       newState.singleSpot = { ...action.payload };
-//       newState.allSpots[action.payload.id] = { ...action.payload }; //????
-//       return newState;
-
-//     default:
-//       return state;
-//   }
-// };
-
-//REFACTORED REDUCER:
-
-// const initialState = { allSpots: {}, singleSpot: {} };
-
-// const spotsReducer = (state = initialState, action) => {
-//   // console.log("action from reducer:", action);
-//   const newState = { ...state };
-
-//   switch (action.type) {
-//     case DELETE_SPOT:
-//       delete newState[action.id];
-//       return newState;
-
-//     case GET_ALL_SPOTS:
-//       action.payload.Spots.forEach(
-//         (spot) => (newState.allSpots[spot.id] = spot)
-//       );
-//       return newState;
-
-//     case GET_SPOT_BY_ID:
-//       let newStateCopy = { ...state };
-//       console.log("HERE MY NEWSTATECOPY:", newStateCopy);
-
-//       newStateCopy = {
-//         ...state,
-//         allSpots: { ...state.allSpots, [action.payload.id]: action.payload },
-//       };
-//       newStateCopy.singleSpot = { ...action.payload };
-//       return newStateCopy;
-
-//     default:
-//       return state;
-//   }
-// };
+//old update

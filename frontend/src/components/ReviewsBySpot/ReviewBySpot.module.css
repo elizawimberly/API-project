@@ -31,7 +31,7 @@
 }
 
 .light {
-  font-weight: 400;
+  font-weight: 200;
   font-size: 16px;
   padding-bottom: 5px;
 }
@@ -46,4 +46,8 @@
 
 .rating {
   padding-left: 10px;
+}
+
+.outer_most {
+  width: 650px;
 }

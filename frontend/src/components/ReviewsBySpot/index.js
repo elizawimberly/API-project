@@ -41,7 +41,7 @@ const ReviewsBySpot = ({ reviews, numReviews, rating }) => {
   }
 
   return (
-    <div>
+    <div className={styles.outer_most}>
       <div className={styles.number}>
         <i className="fas fa-solid fa-star fa-2xs" />
         <div className={styles.rating}>{rating}</div>

@@ -7,6 +7,7 @@ import { updateSpot } from "../../store/spots";
 import { useHistory } from "react-router-dom";
 import { createSpot } from "../../store/spots";
 import { createImageThunk } from "../../store/spots";
+import * as sessionActions from "../../store/session";
 import styles from "../AllSpots/AllSpots.module.css";
 
 const CreateSpotForm = ({ spot }) => {
@@ -14,10 +15,6 @@ const CreateSpotForm = ({ spot }) => {
   const history = useHistory();
 
   const user = useSelector((state) => state.session.user);
-
-  // useEffect(() => {
-  //   dispatch(getSpotById(spotId));
-  // }, [dispatch, spotId]);
 
   const [name, setName] = useState("");
   const [address, setAddress] = useState("");
@@ -92,12 +89,12 @@ const CreateSpotForm = ({ spot }) => {
       preview: true,
     };
 
-    //await dispatch() make action here!!!
     const newSpot = await dispatch(createSpot(payload, user.id));
     if (newSpot) {
-      //call dispatch here that will add image to a spot
       await dispatch(createImageThunk(newSpot.id, newImage));
 
+      //new dispatch added here
+      await dispatch(sessionActions.restoreUser());
       history.push(`/spots/${newSpot.id}`);
     }
   };

@@ -1,6 +1,8 @@
 .container {
   padding-bottom: 15px;
   padding-top: 15px;
+  padding-right: 5px;
+  padding-left: 5px;
   border-radius: 20px;
 }
 

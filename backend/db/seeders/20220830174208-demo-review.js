@@ -71,6 +71,19 @@ module.exports = {
           review: "I am so happy I booked this spot. It was perfect.",
           stars: 3,
         },
+        {
+          spotId: 1,
+          userId: 4,
+          review: "Really lovely place! Definitely recommend.",
+          stars: 3,
+        },
+        {
+          spotId: 2,
+          userId: 4,
+          review:
+            "Flawless stay. Really enjoyed our visit and the house. We will certainly reserve again.",
+          stars: 5,
+        },
       ],
       {}
     );

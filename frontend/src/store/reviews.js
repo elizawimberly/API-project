@@ -114,7 +114,6 @@ const reviewsReducer = (state = initialState, action) => {
   switch (action.type) {
     case GET_ALL_REVIEWS:
       newState.reviewsBySpot = {};
-      console.log("from reducer newState", newState);
       action.payload.Reviews.forEach(
         (review) => (newState.reviewsBySpot[review.id] = review)
       );
