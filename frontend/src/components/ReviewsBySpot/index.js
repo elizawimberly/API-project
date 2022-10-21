@@ -37,7 +37,13 @@ const ReviewsBySpot = ({ reviews, numReviews, rating }) => {
   };
 
   if (Object.keys(spotReviews).length === 0) {
-    return null;
+    console.log("there are no reviews");
+    // return null;
+    return (
+      <div className={styles.message}>
+        There are no reviews for this spot yet
+      </div>
+    );
   }
 
   return (
