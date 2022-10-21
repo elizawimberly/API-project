@@ -31,11 +31,11 @@ https://airbnbprojecteliza.herokuapp.com/
 
 A splash page that allows the user to navigate to different spots and a navigation bar that is present throughout the app which allows the user to log in, log out, or create a spot, or navigate back to the splash page by clicking the logo at the top right.
 
-![images](/authenticate-me/images/splashpage.png)
+![images](/images/splashpage.png)
 
 When a user clicks on a specific spot on the splash page, they are shown a spot details page with information about that specific spot, along with the option to delete or edit that spot if the logged in user is also the owner of that spot.
 
-![images](/authenticate-me/images/spotdetails.png)
+![images](/images/spotdetails.png)
 
 At the bottom of the spot details page are reviews for that spot, with the option to delete a review if the user is the author of that specific review. If the user has posted a review they are not given the option to add another review. Otherwise the user can post a review if they are not the owner of the spot.
 
@@ -43,8 +43,8 @@ At the bottom of the spot details page are reviews for that spot, with the optio
 
 There are two modals accessible from the navigation bar - log in and sign up - if the user is not currently logged in. Once logged in, the user is show the option to post a spot by clicking 'Become A Host!' which will show the form to post a new spot.
 
-![images](/authenticate-me/images/modal.png)
-![images](/authenticate-me/images/form.png)
+![images](/images/modal.png)
+![images](/images/form.png)
 
 ---
 
