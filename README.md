@@ -68,7 +68,7 @@ There are two modals accessible from the navigation bar - log in and sign up - i
 - run <code>npm install</code> from the root of the backend folder and the frontend folder to install the 2 dependancy packages.
 - run <code>npx dotenv sequelize db:migrate</code> from the root of the. backend folder to create the database tables
 - run <code>npx dotenv sequelize db:seed:all</code> from the root of the backend folder to seed the database.
-- run <code>npm</code> start from the root of the backend folder and the root of frontend folder
+- run <code>npm start</code> from the root of the backend folder and the root of frontend folder
 
 ---
 
