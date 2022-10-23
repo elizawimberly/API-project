@@ -35,16 +35,16 @@ A splash page that allows the user to navigate to different spots and a navigati
 
 When a user clicks on a specific spot on the splash page, they are shown a spot details page with information about that specific spot, along with the option to delete or edit that spot if the logged in user is also the owner of that spot.
 
-![images](/images/spotdetails.png)
+![images](./images/spotdetails.png)
 
 At the bottom of the spot details page are reviews for that spot, with the option to delete a review if the user is the author of that specific review. If the user has posted a review they are not given the option to add another review. Otherwise the user can post a review if they are not the owner of the spot.
 
-![images](/images/reviews.png)
+![images](./images/reviews.png)
 
 There are two modals accessible from the navigation bar - log in and sign up - if the user is not currently logged in. Once logged in, the user is show the option to post a spot by clicking 'Become A Host!' which will show the form to post a new spot.
 
-![images](/images/modal.png)
-![images](/images/form.png)
+![images](./images/modal.png)
+![images](./images/form.png)
 
 ---
 
