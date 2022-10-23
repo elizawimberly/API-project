@@ -31,7 +31,7 @@ https://airbnbprojecteliza.herokuapp.com/
 
 A splash page that allows the user to navigate to different spots and a navigation bar that is present throughout the app which allows the user to log in, log out, or create a spot, or navigate back to the splash page by clicking the logo at the top right.
 
-![images](/images/splashpage.png)
+![images](./images/splashpage.png)
 
 When a user clicks on a specific spot on the splash page, they are shown a spot details page with information about that specific spot, along with the option to delete or edit that spot if the logged in user is also the owner of that spot.
 
