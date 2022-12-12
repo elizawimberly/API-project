@@ -6,6 +6,8 @@ import { getAllSpots } from "../../store/spots";
 import SingleSpot from "../SingleSpot";
 import { NavLink } from "react-router-dom";
 
+/******* COMPONENT *********/
+
 const AllSpots = () => {
   const dispatch = useDispatch();
   const spots = useSelector((state) => state.spots);
